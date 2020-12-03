@@ -1,8 +1,0 @@
-prefix=/home/firefly/catkin_ws/install
-
-Name: base_bringup
-Description: Description of base_bringup
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

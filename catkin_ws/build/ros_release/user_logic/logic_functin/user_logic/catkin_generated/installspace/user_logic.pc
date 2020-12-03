@@ -1,8 +1,0 @@
-prefix=/home/firefly/catkin_ws/install
-
-Name: user_logic
-Description: Description of user_logic
-Version: 1.2.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: robot_msg

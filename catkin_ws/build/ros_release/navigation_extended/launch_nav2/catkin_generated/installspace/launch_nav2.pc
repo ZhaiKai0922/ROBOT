@@ -1,8 +1,0 @@
-prefix=/home/firefly/catkin_ws/install
-
-Name: launch_nav2
-Description: Description of launch_nav2
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

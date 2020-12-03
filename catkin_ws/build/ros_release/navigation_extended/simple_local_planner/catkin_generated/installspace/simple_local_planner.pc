@@ -1,8 +1,0 @@
-prefix=/home/firefly/catkin_ws/install
-
-Name: simple_local_planner
-Description: Description of simple_local_planner
-Version: 1.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lsimple_local_planner -lpure_planner_ros
-Requires: roscpp dynamic_reconfigure tf pluginlib costmap_2d nav_core angles

@@ -1,8 +1,0 @@
-prefix=/home/firefly/catkin_ws/install
-
-Name: auto_docking
-Description: Description of auto_docking
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
