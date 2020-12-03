@@ -1,0 +1,2 @@
+set(robot_localization_MESSAGE_FILES "")
+set(robot_localization_SERVICE_FILES "/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/GetState.srv;/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/SetDatum.srv;/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/SetPose.srv;/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/ToggleFilterProcessing.srv;/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/FromLL.srv;/home/firefly/catkin_ws/src/ros_release/robot_localization/srv/ToLL.srv")

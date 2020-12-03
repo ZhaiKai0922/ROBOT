@@ -1,0 +1,94 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2634d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2634d.dir/build.make CMakeFiles/cmTC_2634d.dir/build
+make[1]: Entering directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2634d.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_2634d.dir/CheckSymbolExists.c.o   -c /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_2634d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2634d.dir/link.txt --verbose=1
+/usr/bin/cc      -rdynamic CMakeFiles/cmTC_2634d.dir/CheckSymbolExists.c.o  -o cmTC_2634d 
+CMakeFiles/cmTC_2634d.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x14): undefined reference to `pthread_create'
+CheckSymbolExists.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_2634d.dir/build.make:97: recipe for target 'cmTC_2634d' failed
+make[1]: *** [cmTC_2634d] Error 1
+make[1]: Leaving directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_2634d/fast' failed
+make: *** [cmTC_2634d/fast] Error 2
+
+File /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_28ef9/fast"
+/usr/bin/make -f CMakeFiles/cmTC_28ef9.dir/build.make CMakeFiles/cmTC_28ef9.dir/build
+make[1]: Entering directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_28ef9.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_28ef9.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_28ef9
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_28ef9.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_28ef9.dir/CheckFunctionExists.c.o  -o cmTC_28ef9 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_28ef9.dir/build.make:97: recipe for target 'cmTC_28ef9' failed
+make[1]: *** [cmTC_28ef9] Error 1
+make[1]: Leaving directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_28ef9/fast' failed
+make: *** [cmTC_28ef9/fast] Error 2
+
+
+Determining if the include file FL/Fl.H exists failed with the following output:
+Change Dir: /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_d6372/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d6372.dir/build.make CMakeFiles/cmTC_d6372.dir/build
+make[1]: Entering directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_d6372.dir/CheckIncludeFile.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTC_d6372.dir/CheckIncludeFile.cxx.o -c /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx:1:10: fatal error: FL/Fl.H: No such file or directory
+ #include <FL/Fl.H>
+          ^~~~~~~~~
+compilation terminated.
+CMakeFiles/cmTC_d6372.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_d6372.dir/CheckIncludeFile.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_d6372.dir/CheckIncludeFile.cxx.o] Error 1
+make[1]: Leaving directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_d6372/fast' failed
+make: *** [cmTC_d6372/fast] Error 2
+
+
+Determining if the include file pgm.h exists failed with the following output:
+Change Dir: /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_0ed63/fast"
+/usr/bin/make -f CMakeFiles/cmTC_0ed63.dir/build.make CMakeFiles/cmTC_0ed63.dir/build
+make[1]: Entering directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_0ed63.dir/CheckIncludeFile.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTC_0ed63.dir/CheckIncludeFile.cxx.o -c /home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx
+/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp/CheckIncludeFile.cxx:1:10: fatal error: pgm.h: No such file or directory
+ #include <pgm.h>
+          ^~~~~~~
+compilation terminated.
+CMakeFiles/cmTC_0ed63.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_0ed63.dir/CheckIncludeFile.cxx.o' failed
+make[1]: *** [CMakeFiles/cmTC_0ed63.dir/CheckIncludeFile.cxx.o] Error 1
+make[1]: Leaving directory '/home/firefly/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_0ed63/fast' failed
+make: *** [cmTC_0ed63/fast] Error 2
+
+

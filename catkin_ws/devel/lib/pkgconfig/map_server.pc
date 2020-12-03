@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: map_server
+Description: Description of map_server
+Version: 1.16.6
+Cflags: -I/home/firefly/catkin_ws/src/ros_release/navigation_extended/map_server/include
+Libs: -L${prefix}/lib -lmap_server_image_loader
+Requires: roscpp nav_msgs tf2

@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: docker_detector
+Description: Description of docker_detector
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

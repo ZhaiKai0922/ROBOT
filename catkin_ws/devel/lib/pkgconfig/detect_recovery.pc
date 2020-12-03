@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: detect_recovery
+Description: Description of detect_recovery
+Version: 0.2.0
+Cflags: -I/home/firefly/catkin_ws/src/ros_release/navigation_extended/detect_recovery/include
+Libs: -L${prefix}/lib -ldetect_recovery
+Requires: costmap_2d geometry_msgs nav_core pluginlib roscpp tf2 tf2_ros

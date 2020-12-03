@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: depth_camera_layer
+Description: Description of depth_camera_layer
+Version: 0.5.0
+Cflags: -I/home/firefly/catkin_ws/devel/include -I/home/firefly/catkin_ws/src/ros_release/navigation_extended/depth_camera/depth_camera_layer/include -I/usr/include
+Libs: -L${prefix}/lib -lcostmap_2d -llayers -ldepth_camera_layer /usr/lib/aarch64-linux-gnu/libboost_system.so /usr/lib/aarch64-linux-gnu/libboost_thread.so /usr/lib/aarch64-linux-gnu/libboost_chrono.so /usr/lib/aarch64-linux-gnu/libboost_date_time.so /usr/lib/aarch64-linux-gnu/libboost_atomic.so /usr/lib/aarch64-linux-gnu/libpthread.so
+Requires: angles costmap_2d dynamic_reconfigure geometry_msgs pluginlib roscpp sensor_msgs tf2_geometry_msgs message_filters tf2 tf2_ros robot_msg

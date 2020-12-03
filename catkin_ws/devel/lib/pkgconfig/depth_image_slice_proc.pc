@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: depth_image_slice_proc
+Description: Description of depth_image_slice_proc
+Version: 1.15.0
+Cflags: -I/home/firefly/catkin_ws/src/ros_release/navigation_extended/depth_camera/depth_image_slice_proc/include
+Libs: -L${prefix}/lib -ldepth_image_slice_proc
+Requires: eigen_conversions image_geometry image_transport message_filters nodelet sensor_msgs geometry_msgs stereo_msgs tf2 tf tf2_ros pcl_ros roscpp pluginlib

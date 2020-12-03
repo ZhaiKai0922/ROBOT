@@ -1,0 +1,15 @@
+\subsubsection usage Usage
+\verbatim
+<node name="depth_camera_layer" pkg="depth_camera_layer" type="depth_camera_layer">
+  <param name="enabled" type="bool" value="True" />
+  <param name="topic_name" type="str" value="[]" />
+  <param name="sensor_frame" type="str" value="[]" />
+  <param name="obstacle_keep_time" type="double" value="0.5" />
+  <param name="min_obstacle_heigh" type="double" value="0.03" />
+  <param name="max_obstacle_heigh" type="double" value="0.3" />
+  <param name="min_obstacle_range" type="double" value="0.0" />
+  <param name="max_obstacle_range" type="double" value="1.0" />
+  <param name="expected_update_rate" type="double" value="0.0" />
+</node>
+\endverbatim
+

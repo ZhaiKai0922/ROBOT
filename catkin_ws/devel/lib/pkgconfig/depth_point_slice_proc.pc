@@ -1,0 +1,8 @@
+prefix=/home/firefly/catkin_ws/devel
+
+Name: depth_point_slice_proc
+Description: Description of depth_point_slice_proc
+Version: 1.15.0
+Cflags: 
+Libs: -L${prefix}/lib -ldepth_point_slice_proc
+Requires: eigen_conversions image_geometry image_transport message_filters nodelet sensor_msgs geometry_msgs stereo_msgs tf2 tf tf2_ros pcl_ros roscpp pluginlib

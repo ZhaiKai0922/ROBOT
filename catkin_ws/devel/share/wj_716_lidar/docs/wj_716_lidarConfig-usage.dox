@@ -1,0 +1,14 @@
+\subsubsection usage Usage
+\verbatim
+<node name="wj_716_lidar" pkg="wj_716_lidar" type="wj_716_lidar">
+  <param name="min_ang" type="double" value="-3.14" />
+  <param name="max_ang" type="double" value="3.14" />
+  <param name="angle_increment" type="double" value="0.00582" />
+  <param name="time_increment" type="double" value="6.167129e-05" />
+  <param name="range_min" type="int" value="0" />
+  <param name="range_max" type="int" value="25" />
+  <param name="resize" type="int" value="811" />
+  <param name="frame_id" type="str" value="laser" />
+</node>
+\endverbatim
+

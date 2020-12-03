@@ -1,0 +1,14 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~enabled" : \b [bool] Whether to apply this plugin or not min: False, default: True, max: True
+- \b "~topic_name" : \b [str] The name of the point cloud topic. min: , default: [], max: 
+- \b "~sensor_frame" : \b [str] The name of the coordinate system where the point cloud is located. min: , default: [], max: 
+- \b "~obstacle_keep_time" : \b [double] The duration (seconds) of the marked obstacle. min: 0.0, default: 0.5, max: 100.0
+- \b "~min_obstacle_heigh" : \b [double] The lowest obstacle height. min: 0.0, default: 0.03, max: 100.0
+- \b "~max_obstacle_heigh" : \b [double] The height obstacle highest. min: 0.0, default: 0.3, max: 100.0
+- \b "~min_obstacle_range" : \b [double] The smallest obstacle distance. min: 0.0, default: 0.0, max: 100.0
+- \b "~max_obstacle_range" : \b [double] The farthest obstacle distance. min: 0.0, default: 1.0, max: 100.0
+- \b "~expected_update_rate" : \b [double] The desired update frequency of sensor. min: 0.0, default: 0.0, max: 100.0
+
