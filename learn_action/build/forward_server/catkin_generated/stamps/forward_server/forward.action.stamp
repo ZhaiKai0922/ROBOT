@@ -1,0 +1,12 @@
+#goal definition
+float64 line
+float64 line_velocity
+float64 time_out
+---
+#result definition
+float64 output
+float64 goal_stamp
+---
+#feedback
+float64 fdbk
+

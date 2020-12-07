@@ -1,0 +1,112 @@
+; Auto-generated. Do not edit!
+
+
+(cl:in-package forward_server-msg)
+
+
+;//! \htmlinclude forwardResult.msg.html
+
+(cl:defclass <forwardResult> (roslisp-msg-protocol:ros-message)
+  ((output
+    :reader output
+    :initarg :output
+    :type cl:float
+    :initform 0.0)
+   (goal_stamp
+    :reader goal_stamp
+    :initarg :goal_stamp
+    :type cl:float
+    :initform 0.0))
+)
+
+(cl:defclass forwardResult (<forwardResult>)
+  ())
+
+(cl:defmethod cl:initialize-instance :after ((m <forwardResult>) cl:&rest args)
+  (cl:declare (cl:ignorable args))
+  (cl:unless (cl:typep m 'forwardResult)
+    (roslisp-msg-protocol:msg-deprecation-warning "using old message class name forward_server-msg:<forwardResult> is deprecated: use forward_server-msg:forwardResult instead.")))
+
+(cl:ensure-generic-function 'output-val :lambda-list '(m))
+(cl:defmethod output-val ((m <forwardResult>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader forward_server-msg:output-val is deprecated.  Use forward_server-msg:output instead.")
+  (output m))
+
+(cl:ensure-generic-function 'goal_stamp-val :lambda-list '(m))
+(cl:defmethod goal_stamp-val ((m <forwardResult>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader forward_server-msg:goal_stamp-val is deprecated.  Use forward_server-msg:goal_stamp instead.")
+  (goal_stamp m))
+(cl:defmethod roslisp-msg-protocol:serialize ((msg <forwardResult>) ostream)
+  "Serializes a message object of type '<forwardResult>"
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'output))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'goal_stamp))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+)
+(cl:defmethod roslisp-msg-protocol:deserialize ((msg <forwardResult>) istream)
+  "Deserializes a message object of type '<forwardResult>"
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'output) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'goal_stamp) (roslisp-utils:decode-double-float-bits bits)))
+  msg
+)
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<forwardResult>)))
+  "Returns string type for a message object of type '<forwardResult>"
+  "forward_server/forwardResult")
+(cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql 'forwardResult)))
+  "Returns string type for a message object of type 'forwardResult"
+  "forward_server/forwardResult")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<forwardResult>)))
+  "Returns md5sum for a message object of type '<forwardResult>"
+  "a377225fda5e62b0597f6f116b1ebe01")
+(cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'forwardResult)))
+  "Returns md5sum for a message object of type 'forwardResult"
+  "a377225fda5e62b0597f6f116b1ebe01")
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<forwardResult>)))
+  "Returns full string definition for message of type '<forwardResult>"
+  (cl:format cl:nil "# ====== DO NOT MODIFY! AUTOGENERATED FROM AN ACTION DEFINITION ======~%#result definition~%float64 output~%float64 goal_stamp~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'forwardResult)))
+  "Returns full string definition for message of type 'forwardResult"
+  (cl:format cl:nil "# ====== DO NOT MODIFY! AUTOGENERATED FROM AN ACTION DEFINITION ======~%#result definition~%float64 output~%float64 goal_stamp~%~%~%"))
+(cl:defmethod roslisp-msg-protocol:serialization-length ((msg <forwardResult>))
+  (cl:+ 0
+     8
+     8
+))
+(cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <forwardResult>))
+  "Converts a ROS message object to a list"
+  (cl:list 'forwardResult
+    (cl:cons ':output (output msg))
+    (cl:cons ':goal_stamp (goal_stamp msg))
+))

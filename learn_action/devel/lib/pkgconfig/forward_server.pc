@@ -1,0 +1,8 @@
+prefix=/home/zhx/zk/learn_action/devel
+
+Name: forward_server
+Description: Description of forward_server
+Version: 0.0.0
+Cflags: -I/home/zhx/zk/learn_action/devel/include
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,7 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/zhx/SLAM_learning/ros_based/ros_workspace/devel/lib/python2.7/dist-packages",
+        "/home/zhx/catkin_ws/devel/lib/python2.7/dist-packages",
+        "/opt/ros/kinetic/lib/python2.7/dist-packages"
+    ]
+}
