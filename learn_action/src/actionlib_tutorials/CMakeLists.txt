@@ -155,9 +155,15 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+
 add_executable(fibonacci_server src/fibonacci_server.cpp)
 target_link_libraries(fibonacci_server ${catkin_LIBRARIES})
 add_dependencies(fibonacci_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
+add_executable(fibonacci_client src/fibonacci_client.cpp)
+target_link_libraries(fibonacci_client ${catkin_LIBRARIES})
+add_dependencies(fibonacci_client ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
 
 #############
 ## Install ##

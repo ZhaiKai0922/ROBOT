@@ -1,8 +1,8 @@
-prefix=/home/zk/zk/ROBOT/learn_action/devel
+prefix=/home/zhx/zk/ROBOT/learn_action/devel
 
 Name: actionlib_tutorials
 Description: Description of actionlib_tutorials
 Version: 0.0.0
-Cflags: -I/home/zk/zk/ROBOT/learn_action/devel/include
+Cflags: -I/home/zhx/zk/ROBOT/learn_action/devel/include
 Libs: -L${prefix}/lib 
 Requires: 
