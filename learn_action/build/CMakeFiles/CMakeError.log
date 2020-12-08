@@ -1,24 +1,24 @@
 Determining if the pthread_create exist failed with the following output:
-Change Dir: /home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp
+Change Dir: /home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_661ed/fast"
-/usr/bin/make -f CMakeFiles/cmTC_661ed.dir/build.make CMakeFiles/cmTC_661ed.dir/build
-make[1]: Entering directory '/home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_661ed.dir/CheckSymbolExists.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_661ed.dir/CheckSymbolExists.c.o   -c /home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
-Linking C executable cmTC_661ed
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_661ed.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_661ed.dir/CheckSymbolExists.c.o  -o cmTC_661ed -rdynamic 
-CMakeFiles/cmTC_661ed.dir/CheckSymbolExists.c.o：在函数‘main’中：
-CheckSymbolExists.c:(.text+0x16)：对‘pthread_create’未定义的引用
+Run Build Command:"/usr/bin/make" "cmTC_cccb4/fast"
+/usr/bin/make -f CMakeFiles/cmTC_cccb4.dir/build.make CMakeFiles/cmTC_cccb4.dir/build
+make[1]: 进入目录“/home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_cccb4.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_cccb4.dir/CheckSymbolExists.c.o   -c /home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_cccb4
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_cccb4.dir/link.txt --verbose=1
+/usr/bin/cc      -rdynamic CMakeFiles/cmTC_cccb4.dir/CheckSymbolExists.c.o  -o cmTC_cccb4 
+CMakeFiles/cmTC_cccb4.dir/CheckSymbolExists.c.o：在函数‘main’中：
+CheckSymbolExists.c:(.text+0x1b)：对‘pthread_create’未定义的引用
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_661ed.dir/build.make:97: recipe for target 'cmTC_661ed' failed
-make[1]: *** [cmTC_661ed] Error 1
-make[1]: Leaving directory '/home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_661ed/fast' failed
-make: *** [cmTC_661ed/fast] Error 2
+CMakeFiles/cmTC_cccb4.dir/build.make:97: recipe for target 'cmTC_cccb4' failed
+make[1]: *** [cmTC_cccb4] Error 1
+make[1]: 离开目录“/home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp”
+Makefile:126: recipe for target 'cmTC_cccb4/fast' failed
+make: *** [cmTC_cccb4/fast] Error 2
 
-File /home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+File /home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
 /* */
 #include <pthread.h>
 
@@ -34,22 +34,22 @@ int main(int argc, char** argv)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp
+Change Dir: /home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_f6e3a/fast"
-/usr/bin/make -f CMakeFiles/cmTC_f6e3a.dir/build.make CMakeFiles/cmTC_f6e3a.dir/build
-make[1]: Entering directory '/home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_f6e3a.dir/CheckFunctionExists.c.o
-/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_f6e3a.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
-Linking C executable cmTC_f6e3a
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f6e3a.dir/link.txt --verbose=1
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_f6e3a.dir/CheckFunctionExists.c.o  -o cmTC_f6e3a -rdynamic -lpthreads 
+Run Build Command:"/usr/bin/make" "cmTC_a4a6d/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a4a6d.dir/build.make CMakeFiles/cmTC_a4a6d.dir/build
+make[1]: 进入目录“/home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp”
+Building C object CMakeFiles/cmTC_a4a6d.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_a4a6d.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.10/Modules/CheckFunctionExists.c
+Linking C executable cmTC_a4a6d
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_a4a6d.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    -rdynamic CMakeFiles/cmTC_a4a6d.dir/CheckFunctionExists.c.o  -o cmTC_a4a6d -lpthreads 
 /usr/bin/ld: 找不到 -lpthreads
 collect2: error: ld returned 1 exit status
-CMakeFiles/cmTC_f6e3a.dir/build.make:97: recipe for target 'cmTC_f6e3a' failed
-make[1]: *** [cmTC_f6e3a] Error 1
-make[1]: Leaving directory '/home/zhx/zk/learn_action/build/CMakeFiles/CMakeTmp'
-Makefile:126: recipe for target 'cmTC_f6e3a/fast' failed
-make: *** [cmTC_f6e3a/fast] Error 2
+CMakeFiles/cmTC_a4a6d.dir/build.make:97: recipe for target 'cmTC_a4a6d' failed
+make[1]: *** [cmTC_a4a6d] Error 1
+make[1]: 离开目录“/home/zk/zk/ROBOT/learn_action/build/CMakeFiles/CMakeTmp”
+Makefile:126: recipe for target 'cmTC_a4a6d/fast' failed
+make: *** [cmTC_a4a6d/fast] Error 2
 
 

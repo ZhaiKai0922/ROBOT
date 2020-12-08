@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = "/home/zhx/zk/learn_action/src"
-whitelisted_packages = "".split(';') if "" != "" else []
-blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/home/zhx/SLAM_learning/ros_based/ros_workspace/devel;/home/zhx/catkin_ws/devel;/opt/ros/kinetic".split(';') if "/home/zhx/SLAM_learning/ros_based/ros_workspace/devel;/home/zhx/catkin_ws/devel;/opt/ros/kinetic" != "" else []
+source_root_dir = '/home/zk/zk/ROBOT/learn_action/src'
+whitelisted_packages = ''.split(';') if '' != '' else []
+blacklisted_packages = ''.split(';') if '' != '' else []
+underlay_workspaces = '/home/zk/robot/tf_ws/devel;/home/zk/robot/kinect_ws/devel;/home/zk/robot/xbot_ws/devel;/opt/ros/melodic'.split(';') if '/home/zk/robot/tf_ws/devel;/home/zk/robot/kinect_ws/devel;/home/zk/robot/xbot_ws/devel;/opt/ros/melodic' != '' else []
