@@ -1,4 +1,4 @@
-prefix=/home/zk/zk/ROBOT/learn_action/install
+prefix=/home/zhx/zk/ROBOT/learn_action/install
 
 Name: forward_server
 Description: Description of forward_server

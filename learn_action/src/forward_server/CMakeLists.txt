@@ -160,9 +160,9 @@ add_executable(forward_server src/forward.cpp)
 target_link_libraries( forward_server ${catkin_LIBRARIES})
 add_dependencies(forward_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
-#add_executable(DoDishes_server src/DoDishes_server.cpp)
-#target_link_libraries( DoDishes_server ${catkin_LIBRARIES})
-#add_dependencies(DoDishes_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_executable(demo src/demo.cpp)
+target_link_libraries( demo ${catkin_LIBRARIES})
+add_dependencies(demo ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 
 

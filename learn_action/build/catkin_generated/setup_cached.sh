@@ -7,10 +7,10 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/zk/zk/ROBOT/learn_action/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/zk/zk/ROBOT/learn_action/devel/lib:$LD_LIBRARY_PATH"
-export PKG_CONFIG_PATH="/home/zk/zk/ROBOT/learn_action/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
-export PWD='/home/zk/zk/ROBOT/learn_action/build'
-export PYTHONPATH="/home/zk/zk/ROBOT/learn_action/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/zk/zk/ROBOT/learn_action/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export CMAKE_PREFIX_PATH="/home/zhx/zk/ROBOT/learn_action/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/zhx/zk/ROBOT/learn_action/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/zhx/zk/ROBOT/learn_action/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PWD="/home/zhx/zk/ROBOT/learn_action/build"
+export PYTHONPATH="/home/zhx/zk/ROBOT/learn_action/devel/lib/python2.7/dist-packages:$PYTHONPATH"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/zhx/zk/ROBOT/learn_action/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/zhx/zk/learn_action/src:/home/zk/zk/ROBOT/learn_action/src:/home/zhx/zk/ROBOT/learn_action/src:$ROS_PACKAGE_PATH"

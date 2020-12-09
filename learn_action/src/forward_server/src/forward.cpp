@@ -7,7 +7,7 @@
 ros::Subscriber pose_sub;
 ros::Publisher linear_velocity_pub;
 turtlesim::Pose nowps;
-geometry_msgs::Twist lin_msg,lin_min,definite_lin;
+geometry_msgs::Twist lin_msg;
 float add_line,time_out;
 
 //使用typedef为现有的SimpleActionServer模板类创建一个别名：Server；
@@ -17,10 +17,11 @@ typedef actionlib::SimpleActionServer<forward_server::forwardAction> Server;
 //收到action的goal后调用该回调函数
 void execute(const forward_server::forwardGoalConstPtr& goal, Server* as)
 {
+    //传入的参数linear_velocity、line、time赋值给前面定义的lin_msg、add_line、time_out
     lin_msg.linear.x = goal->linear_velocity;
     add_line = goal->line;
     time_out = goal->time;
-
+    //声明用于发布的反馈（feedback）以及结果（result）
     forward_server::forwardFeedback feedback;
     forward_server::forwardResult result;
 

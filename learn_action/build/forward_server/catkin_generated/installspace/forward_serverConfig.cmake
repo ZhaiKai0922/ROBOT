@@ -67,14 +67,14 @@ set(forward_server_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(forward_server_SOURCE_PREFIX /home/zk/zk/ROBOT/learn_action/src/forward_server)
-  set(forward_server_DEVEL_PREFIX /home/zk/zk/ROBOT/learn_action/devel)
+  set(forward_server_SOURCE_PREFIX /home/zhx/zk/ROBOT/learn_action/src/forward_server)
+  set(forward_server_DEVEL_PREFIX /home/zhx/zk/ROBOT/learn_action/devel)
   set(forward_server_INSTALL_PREFIX "")
   set(forward_server_PREFIX ${forward_server_DEVEL_PREFIX})
 else()
   set(forward_server_SOURCE_PREFIX "")
   set(forward_server_DEVEL_PREFIX "")
-  set(forward_server_INSTALL_PREFIX /home/zk/zk/ROBOT/learn_action/install)
+  set(forward_server_INSTALL_PREFIX /home/zhx/zk/ROBOT/learn_action/install)
   set(forward_server_PREFIX ${forward_server_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/zk/zk/ROBOT/learn_action/install/lib;/home/zk/robot/tf_ws/devel/lib;/home/zk/robot/kinect_ws/devel/lib;/home/zk/robot/xbot_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/zhx/zk/ROBOT/learn_action/install/lib;/home/zhx/SLAM_learning/ros_based/ros_workspace/devel/lib;/home/zhx/catkin_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
