@@ -1,12 +1,13 @@
 #goal definition
 float64 line
-float64 line_velocity
-float64 time_out
+float64 linear_velocity
+float64 time
 ---
 #result definition
-float64 output
-float64 goal_stamp
+float64 output_x
+float64 output_y
 ---
 #feedback
-float64 fdbk
+float64 feedback_x
+float64 feedback_y
 

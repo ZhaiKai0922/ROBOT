@@ -1,2 +1,2 @@
 actionlib_tutorials:forward_server
--DCATKIN_DEVEL_PREFIX=/home/zhx/zk/ROBOT/learn_action/devel -DCMAKE_INSTALL_PREFIX=/home/zhx/zk/ROBOT/learn_action/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/zk/zk/ROBOT/learn_action/devel -DCMAKE_INSTALL_PREFIX=/home/zk/zk/ROBOT/learn_action/install -G Unix Makefiles

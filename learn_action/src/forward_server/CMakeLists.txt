@@ -156,9 +156,9 @@ include_directories(
 # )
 
 
-#add_executable(DoDishes_client src/DoDishes_client.cpp)
-#target_link_libraries( DoDishes_client ${catkin_LIBRARIES})
-#add_dependencies(DoDishes_client ${${PROJECT_NAME}_EXPORTED_TARGETS})
+add_executable(forward_server src/forward.cpp)
+target_link_libraries( forward_server ${catkin_LIBRARIES})
+add_dependencies(forward_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 #add_executable(DoDishes_server src/DoDishes_server.cpp)
 #target_link_libraries( DoDishes_server ${catkin_LIBRARIES})
