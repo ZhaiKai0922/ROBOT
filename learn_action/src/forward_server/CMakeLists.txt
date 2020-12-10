@@ -74,7 +74,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   std_msgs  # Or other packages containing msgs
 # )
 
-find_package(catkin REQUIRED genmsg actionlib_msgs actionlib)
+
 add_action_files(DIRECTORY action FILES forward.action)
 generate_messages(DEPENDENCIES actionlib_msgs)
 
@@ -160,9 +160,9 @@ add_executable(forward_server src/forward.cpp)
 target_link_libraries( forward_server ${catkin_LIBRARIES})
 add_dependencies(forward_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
-add_executable(demo src/demo.cpp)
-target_link_libraries( demo ${catkin_LIBRARIES})
-add_dependencies(demo ${${PROJECT_NAME}_EXPORTED_TARGETS})
+#add_executable(demo src/demo.cpp)
+#target_link_libraries( demo ${catkin_LIBRARIES})
+#add_dependencies(demo ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 
 

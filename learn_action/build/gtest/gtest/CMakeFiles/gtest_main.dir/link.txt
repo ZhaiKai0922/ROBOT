@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC   -shared -Wl,-soname,libgtest_main.so -o libgtest_main.so CMakeFiles/gtest_main.dir/src/gtest_main.cc.o  -L/home/zhx/zk/ROBOT/learn_action/build/gtest/gtest/src -lpthread libgtest.so -lpthread -Wl,-rpath,/home/zhx/zk/ROBOT/learn_action/build/gtest/gtest/src:/home/zhx/zk/ROBOT/learn_action/build/gtest/gtest 
