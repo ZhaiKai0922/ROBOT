@@ -4,19 +4,19 @@
 int input_x = 1;
 int input_y = 2;
 
-void callback(const turtlesim::PoseConstPtr& msg)
-{
-    float pose_x;
-    pose_x = msg->x;
-    ROS_INFO("x = [%f]",pose_x);
-}
-
 void callback(const turtlesim::PoseConstPtr& msg, int x, int y)
 {
     float pose_x;
     pose_x = msg->x;
     ROS_INFO("x = [%f]",pose_x);
     ROS_INFO("input_x = [%i] ; input_y = [%i]", x, y);
+}
+
+void callback(const turtlesim::PoseConstPtr& msg)
+{
+    float pose_x;
+    pose_x = msg->x;
+    ROS_INFO("x = [%f]",pose_x);
 }
 
 int main(int argc, char** argv)
