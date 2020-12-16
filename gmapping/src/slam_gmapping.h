@@ -76,11 +76,14 @@ class SlamGMapping
     GMapping::RangeSensor* gsp_laser_;
     // The angles in the laser, going from -x to x (adjustment is made to get the laser between
     // symmetrical bounds as that's what gmapping expects)
+    //激光的角度，从-x到x（调整得到激光在对称边界之间，这是Gmapping所期望的）
     std::vector<double> laser_angles_;
     // The pose, in the original laser frame, of the corresponding centered laser with z facing up
+    //对应z轴朝上的中心激光器在原始激光帧中的位姿
     tf::Stamped<tf::Pose> centered_laser_pose_;
     // Depending on the order of the elements in the scan and the orientation of the scan frame,
     // We might need to change the order of the scan
+    //根据扫描中元素的顺序和扫描帧的方向，我们可能需要改变扫描的方向
     bool do_reverse_range_;
     unsigned int gsp_laser_beam_count_;
     GMapping::OdometrySensor* gsp_odom_;

@@ -283,12 +283,15 @@ void SlamGMapping::startLiveSlam()
   //发布一个/map_metadata的话题，消息类型为：nav_msgs::MapMetaData 即占有率栅格地图数据
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
   //发布一个/dynamic_map的服务，一旦有服务请求，进入回调函数
+
   scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "scan", 5);
-  
+  //message_filters::Subscriber<sensor_msgs::LaserScan>* scan_filter_sub_;
   scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
+  //tf::MessageFilter<sensor_msgs::LaserScan>* scan_filter_;
   scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
-  
+  //注册回调函数，this表示当前对象scan_filter_，_1表示占位符
   transform_thread_ = new boost::thread(boost::bind(&SlamGMapping::publishLoop, this, transform_publish_period_));
+  //开始一个线程 不太懂......
 }
 
 void SlamGMapping::startReplay(const std::string & bag_fname, std::string scan_topic)
@@ -553,6 +556,7 @@ SlamGMapping::initMapper(const sensor_msgs::LaserScan& scan)
 }
 
 bool
+//addScan函数，参数：scan、odom_pose(里程计位姿)
 SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoint& gmap_pose)
 {
   if(!getOdomPose(gmap_pose, scan.header.stamp))
@@ -562,8 +566,10 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
     return false;
 
   // GMapping wants an array of doubles...
+  //Gampping需要一个双精度的数组
   double* ranges_double = new double[scan.ranges.size()];
   // If the angle increment is negative, we have to invert the order of the readings.
+  //如果角度增量是负的，我们就要颠倒读数的顺序
   if (do_reverse_range_)
   {
     ROS_DEBUG("Inverting scan");
@@ -592,7 +598,7 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
                                  ranges_double,
                                  gsp_laser_,
                                  scan.header.stamp.toSec());
-
+  //但是在rangereading构造函数中深度复制它们，因此我们不需要保留数组
   // ...but it deep copies them in RangeReading constructor, so we don't
   // need to keep our array around.
   delete[] ranges_double;
@@ -610,6 +616,7 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
 
   return gsp_->processScan(reading);
 }
+//addscan()函数只是将获取到的scan消息作下一步处理，过滤到无效值，将处理过的数据传入processScan()函数，这个函数如果在ros上安装了gmapping包，在ros路径下找到
 
 void
 SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
@@ -634,13 +641,15 @@ SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
   {
     ROS_DEBUG("scan processed");
 
-    GMapping::OrientedPoint mpose = gsp_->getParticles()[gsp_->getBestParticleIndex()].pose;
+    GMapping::OrientedPoint mpose = gsp_->getParticles()[gsp_->getBestParticleIndex()].pose;//不太理解
+    //GMapping::GridSlamProcessor* gsp_; 
     ROS_DEBUG("new best pose: %.3f %.3f %.3f", mpose.x, mpose.y, mpose.theta);
     ROS_DEBUG("odom pose: %.3f %.3f %.3f", odom_pose.x, odom_pose.y, odom_pose.theta);
     ROS_DEBUG("correction: %.3f %.3f %.3f", mpose.x - odom_pose.x, mpose.y - odom_pose.y, mpose.theta - odom_pose.theta);
 
     tf::Transform laser_to_map = tf::Transform(tf::createQuaternionFromRPY(0, 0, mpose.theta), tf::Vector3(mpose.x, mpose.y, 0.0)).inverse();
     tf::Transform odom_to_laser = tf::Transform(tf::createQuaternionFromRPY(0, 0, odom_pose.theta), tf::Vector3(odom_pose.x, odom_pose.y, 0.0));
+    //不理解
 
     map_to_odom_mutex_.lock();
     map_to_odom_ = (odom_to_laser * laser_to_map).inverse();
