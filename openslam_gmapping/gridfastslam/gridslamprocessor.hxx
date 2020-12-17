@@ -6,6 +6,7 @@
 
 /**Just scan match every single particle.
 If the scan matching fails, the particle gets a default likelihood.*/
+//****************************************************************************************scanMatch****************************************************************
 inline void GridSlamProcessor::scanMatch(const double* plainReading){
   // sample a new pose from each scan in the reference
   

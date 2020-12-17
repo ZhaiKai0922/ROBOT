@@ -186,7 +186,23 @@ ScanMatcher::optimize( )方法——粒子的运动+score( )中激光观测数�
 
 参考网站：https://www.cnblogs.com/yhlx125/p/5586499.html
 
-**2D激光扫描匹配方法：**
+**slam-gmapping之scanMatch算法原理：**
+
+- 问题描述：给定scan和map，或者给定scan和scan，或者给定map和map，找到最匹配的变换（translation+rotation）
+- 作用：提高提议分布
+- 方法：
+
+![image-20201217165000018](/home/zk/zk/ROBOT/learn_gmapping/image-20201217165000018.png)
+
+
+
+
+
+
+
+
+
+
 
 
 

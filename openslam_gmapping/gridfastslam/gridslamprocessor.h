@@ -34,7 +34,7 @@ namespace GMapping {
   class GridSlamProcessor{
   public:
 
-    
+
     /**This class defines the the node of reversed tree in which the trajectories are stored.
        Each node of a tree has a pointer to its parent and a counter indicating the number of childs of a node.
        The tree is updated in a way consistent with the operation performed on the particles.

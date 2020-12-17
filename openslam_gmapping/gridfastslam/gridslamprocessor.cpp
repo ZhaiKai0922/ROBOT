@@ -308,7 +308,7 @@ void GridSlamProcessor::setMotionModelParameters
     }
   }
   
-  
+  //***********************************************************************************很重要*************************************************************************
   bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles){
     
     /**retireve the position from the reading, and compute the odometry*/
