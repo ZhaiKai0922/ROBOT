@@ -425,7 +425,8 @@ void * GridSlamProcessorThread::fastslamthread(GridSlamProcessorThread* gpt){
 				const RangeSensor* rs=dynamic_cast<const RangeSensor*>(rr->getSensor());
 				assert (rs && rs->beams().size()==rr->size());
 				
-				bool processed=gpt->processScan(*rr);
+				//*****************************************************************************很重要******************************************************************
+				bool processed=gpt->processScan(*rr); 
 				rawpath << rr->getPose().x << " " << rr->getPose().y << " " << rr->getPose().theta << endl;
 				if (0 && processed){
 				cerr << "Retrieving state .. ";

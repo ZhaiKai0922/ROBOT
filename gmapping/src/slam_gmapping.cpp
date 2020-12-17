@@ -614,7 +614,7 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
             */
   ROS_DEBUG("processing scan");
 
-  return gsp_->processScan(reading);
+  return gsp_->processScan(reading);  //*********************************************进入processScan函数*********************************
 }
 //addscan()函数只是将获取到的scan消息作下一步处理，过滤到无效值，将处理过的数据传入processScan()函数，这个函数如果在ros上安装了gmapping包，在ros路径下找到
 
@@ -657,7 +657,7 @@ SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
     if(!got_map_ || (scan->header.stamp - last_map_update) > map_update_interval_)
     {
-      updateMap(*scan);
+      updateMap(*scan);  //****************************************************************************updateMap************************************
       last_map_update = scan->header.stamp;
       ROS_DEBUG("Updated the map");
     }
