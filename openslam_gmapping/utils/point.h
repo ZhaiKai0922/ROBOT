@@ -51,10 +51,10 @@ struct orientedpoint: public point<T>{
 	inline orientedpoint<T,A> rotate(A alpha){
 		T s=sin(alpha), c=cos(alpha);
 		A a=alpha+theta;
-		a=atan2(sin(a),cos(a));
+		a=atan2(sin(a),cos(a));//atan2(y, x) 求的是y/x的反正切，
 		return orientedpoint(
-			c*this->x-s*this->y,
-			s*this->x+c*this->y, 
+			c*this->x - s*this->y,
+			s*this->x + c*this->y, 
 			a);
 	}
 	A theta;
