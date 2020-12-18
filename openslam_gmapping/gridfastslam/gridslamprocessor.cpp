@@ -314,11 +314,13 @@ void GridSlamProcessor::setMotionModelParameters
   bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles){
     
     /**retireve the position from the reading, and compute the odometry*/
+    //从reading中获取位姿，然后计算量距
     OrientedPoint relPose=reading.getPose();
     if (!m_count){
       m_lastPartPose=m_odoPose=relPose;
     }
     
+    //使用运动模型更新所有粒子
     //write the state of the reading and update all the particles using the motion model
     for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
       OrientedPoint& pose(it->pose);
@@ -326,6 +328,7 @@ void GridSlamProcessor::setMotionModelParameters
     }
 
     // update the output file
+    //更新输出文件
     if (m_outputStream.is_open()){
       m_outputStream << setiosflags(ios::fixed) << setprecision(6);
       m_outputStream << "ODOM ";
@@ -347,10 +350,12 @@ void GridSlamProcessor::setMotionModelParameters
     }
     
     //invoke the callback
+    //调用回调函数
     onOdometryUpdate();
     
 
     // accumulate the robot translation and rotation
+    //累积机器人的平移与旋转
     OrientedPoint move=relPose-m_odoPose;
     move.theta=atan2(sin(move.theta), cos(move.theta));
     m_linearDistance+=sqrt(move*move);
@@ -377,6 +382,7 @@ void GridSlamProcessor::setMotionModelParameters
     bool processed=false;
 
     // process a scan only if the robot has traveled a given distance
+    //仅当机器人走过给定的距离时才进行扫描
     if (! m_count 
 	|| m_linearDistance>m_linearThresholdDistance 
 	|| m_angularDistance>m_angularThresholdDistance){
@@ -398,6 +404,7 @@ void GridSlamProcessor::setMotionModelParameters
       
       
       //this is for converting the reading in a scan-matcher feedable form
+      //将reading 转换为san-matcher的形式
       assert(reading.size()==m_beams);
       double * plainReading = new double[m_beams];
       for(unsigned int i=0; i<m_beams; i++){

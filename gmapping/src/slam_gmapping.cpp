@@ -628,16 +628,17 @@ SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
   static ros::Time last_map_update(0,0);
 
   // We can't initialize the mapper until we've got the first scan
-  if(!got_first_scan_)
+  if(!got_first_scan_)       //判断got_first_scan是否为第一帧数据
   {
-    if(!initMapper(*scan))
+    if(!initMapper(*scan))   //判断为是，调用initMapper初始化gmapping所需各种参数
       return;
     got_first_scan_ = true;
   }
 
   GMapping::OrientedPoint odom_pose;
 
-  if(addScan(*scan, odom_pose))
+  if(addScan(*scan, odom_pose))   //调用addScan函数，可以进入到addScan函数看一下
+  //addScan函数只是将获取到的scan消息做下一步处理，过滤掉无效值，将处理过的数据传入processScan( )函数中执行gmapping算法流程
   {
     ROS_DEBUG("scan processed");
 
@@ -657,7 +658,7 @@ SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
     if(!got_map_ || (scan->header.stamp - last_map_update) > map_update_interval_)
     {
-      updateMap(*scan);  //****************************************************************************updateMap************************************
+      updateMap(*scan);  //调用updateMap更新地图**********************************************************updateMap********************************************************
       last_map_update = scan->header.stamp;
       ROS_DEBUG("Updated the map");
     }

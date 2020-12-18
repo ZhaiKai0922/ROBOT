@@ -9,12 +9,14 @@ If the scan matching fails, the particle gets a default likelihood.*/
 //****************************************************************************************scanMatch****************************************************************
 inline void GridSlamProcessor::scanMatch(const double* plainReading){
   // sample a new pose from each scan in the reference
-  
+  //通过参考帧来搜寻局部最优位姿
+
   double sumScore=0;
   for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
     OrientedPoint corrected;
     double score, l, s;
-    score=m_matcher.optimize(corrected, it->map, it->pose, plainReading);
+    score=m_matcher.optimize(corrected, it->map, it->pose, plainReading);//**************************调用optimize函数执行盘山算法搜寻局部最优位姿****************
+    //用最优位姿替换掉原来的位姿
     //    it->pose=corrected;
     if (score>m_minimumScore){
       it->pose=corrected;
@@ -39,6 +41,7 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading){
   if (m_infoStream)
     m_infoStream << "Average Scan Matching Score=" << sumScore/m_particles.size() << std::endl;	
 }
+//****************************************************************************************************scanMatch******************************************************************
 
 inline void GridSlamProcessor::normalize(){
   //normalize the log m_weights
