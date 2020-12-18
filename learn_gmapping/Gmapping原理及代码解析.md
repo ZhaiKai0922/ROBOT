@@ -200,17 +200,100 @@ ScanMatcher::optimize( )方法——粒子的运动+score( )中激光观测数�
 
 
 
-
-
-
-
-
-
-
-
 ## 4. point.h
 
 ##  5. processScan
+
+---
+
+2020.12.18
+
+---
+
+## Gmapping学习
+
+### 1. slam_gmapping文件夹
+
+slam_gmapping文件夹中的main.cpp文件中定义了SlamGmapping类的一个变量并执行了startLiveSlam函数。
+
+slam_gmapping.cpp中有几个非常重要的函数。
+
+1.main.cpp中执行的构造函数是SlamGmapping类的无参数传入的构造函数，主要是读取参数文件的参数。
+
+2.startLiveSlam函数订阅和发布了一些话题。
+
+3.publishLoop函数周期性发布map->odom的转换关系。
+
+4.laserCallback函数是调用gmapping算法的主要函数。下图显示了该函数的执行流程：
+
+![img](/home/zk/zk/ROBOT/learn_gmapping/20191031101031290.png)
+
+5. updateMap函数里会获取权重最大的粒子，然后遍历该粒子的整个运动轨迹，并用轨迹上的各个点携带的激光数据生成地图。因为下次选中的可能不是原来的粒子，所以这里每次都会找到权重最大的粒子然后重新生成地图，发布出去。
+
+**sensor/sensor.h**
+
+```cpp
+class Sensor{
+	public:
+		Sensor(const std::string& name="");
+		virtual ~Sensor();
+		inline std::string getName() const {return m_name;}
+		inline void setName(const std::string& name) {m_name=name;}
+	protected:
+		std::string m_name;
+};
+
+typedef std::map<std::string, Sensor*> SensorMap;
+```
+
+**sensor_base/sensorreading.h**
+
+```cpp
+class SensorReading{
+	public:
+		SensorReading(const Sensor* s=0, double time=0);
+		virtual ~SensorReading();
+		inline double getTime() const {return m_time;}
+		inline void setTime(double t) {m_time=t;}
+		inline const Sensor* getSensor() const {return m_sensor;}
+	protected:
+		double m_time;
+		const Sensor* m_sensor;
+
+};
+```
+
+**sensor_range/rangereading.h**
+
+```cpp
+class RangeReading: public SensorReading, public std::vector<double>{
+	public:
+		RangeReading(const RangeSensor* rs, double time=0);
+		RangeReading(unsigned int n_beams, const double* d, const RangeSensor* rs, double time=0);
+		virtual ~RangeReading();
+		inline const OrientedPoint& getPose() const {return m_pose;}
+		inline void setPose(const OrientedPoint& pose) {m_pose=pose;}
+		unsigned int rawView(double* v, double density=0.) const;
+		std::vector<Point> cartesianForm(double maxRange=1e6) const;
+		unsigned int activeBeams(double density=0.) const;
+	protected:
+		OrientedPoint m_pose;
+};
+```
+
+
+
+### openslam_gmapping 文件夹
+
+gmapping算法的主要处理函数就是gridslamprocessor.cpp中的processScan函数。slam_gmapping文件夹中的执行函数主要就是将ros格式的数据打包成gmapping算法所需要的数据格式，然后传入processScan函数。下图是该函数的执行流程：
+
+![img](/home/zk/zk/ROBOT/learn_gmapping/2019103110443490.png)
+
+1.调用drawFromMotion函数更新每个粒子的位置分布。该函数里面对x, y, theta各个状态量维度都加了高斯噪声。论文中描述的算法好像没有说高斯噪声。
+
+
+
+
 
 
 
