@@ -28,6 +28,7 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading){
 	}
     }
 
+    //利用likelihood_field_range_finder_model计算每个粒子的权重
     m_matcher.likelihoodAndScore(s, l, it->map, it->pose, plainReading);
     sumScore+=score;
     it->weight+=l;

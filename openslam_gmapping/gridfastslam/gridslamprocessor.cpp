@@ -432,7 +432,7 @@ void GridSlamProcessor::setMotionModelParameters
 	}
 	onScanmatchUpdate();
 	
-	updateTreeWeights(false);
+	updateTreeWeights(false);//进行权重归一化，并计算Neff
 				
 	if (m_infoStream){
 	  m_infoStream << "neff= " << m_neff  << endl;
@@ -441,7 +441,7 @@ void GridSlamProcessor::setMotionModelParameters
 	  m_outputStream << setiosflags(ios::fixed) << setprecision(6);
 	  m_outputStream << "NEFF " << m_neff << endl;
 	}
-	resample(plainReading, adaptParticles);
+	resample(plainReading, adaptParticles);//执行重采样
 	
       } else {
 	m_infoStream << "Registering First Scan"<< endl;
