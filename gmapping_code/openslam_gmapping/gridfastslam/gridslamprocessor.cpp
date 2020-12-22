@@ -311,172 +311,95 @@ void GridSlamProcessor::setMotionModelParameters
   //************************************************************************************addScan——>processScan*****************************************************
   //********************************************************************************************************************************************
   //***********************************************************************************很重要*************************************************************************
-  bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles){
+  bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles ){
     
-    /**retireve the position from the reading, and compute the odometry*/
     //从reading中获取位姿
+    //得到当前激光雷达的里程计位姿
     OrientedPoint relPose=reading.getPose();
+    
+    //m_count表示这个函数的调用次数，如果是第0次调用，上一次初始化上一次里程计位姿
     if (!m_count){
       m_lastPartPose=m_odoPose=relPose;
     }
     
     //使用运动模型更新所有粒子
-    //write the state of the reading and update all the particles using the motion model
+    //对于每一个粒子都从运动模型中采样，更新每一个粒子对象存储地图坐标系下的激光雷达的位姿，这里注意是地图坐标系下的坐标
     for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
+      //对于每一个粒子，将从运动模型传播的激光雷达位姿存放到m_particles[i].pose，即最新的地图坐标系下的激光雷达的位姿
       OrientedPoint& pose(it->pose);
       pose=m_motionModel.drawFromMotion(it->pose, relPose, m_odoPose);
     }
+    //这里要区分三个位姿
+    //m_particle[i].pose最新的地图坐标系下的激光雷达最优位姿
+    //relpose：当前激光雷达的里程计位姿
+    //m_odoPose：表示上一次的激光雷达的里程计位姿
 
-    // update the output file
-    //更新输出文件
-    if (m_outputStream.is_open()){
-      m_outputStream << setiosflags(ios::fixed) << setprecision(6);
-      m_outputStream << "ODOM ";
-      m_outputStream << setiosflags(ios::fixed) << setprecision(3) << m_odoPose.x << " " << m_odoPose.y << " ";
-      m_outputStream << setiosflags(ios::fixed) << setprecision(6) << m_odoPose.theta << " ";
-      m_outputStream << reading.getTime();
-      m_outputStream << endl;
-    }
-    if (m_outputStream.is_open()){
-      m_outputStream << setiosflags(ios::fixed) << setprecision(6);
-      m_outputStream << "ODO_UPDATE "<< m_particles.size() << " ";
-      for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
-	OrientedPoint& pose(it->pose);
-	m_outputStream << setiosflags(ios::fixed) << setprecision(3) << pose.x << " " << pose.y << " ";
-	m_outputStream << setiosflags(ios::fixed) << setprecision(6) << pose.theta << " " << it-> weight << " ";
-      }
-      m_outputStream << reading.getTime();
-      m_outputStream << endl;
-    }
-    
-    //invoke the callback
-    //调用回调函数
-    onOdometryUpdate();
-    
 
-    // accumulate the robot translation and rotation
-    //累积机器人的平移与旋转
+    //根据两次里程计的数据，计算出激光雷达的线性位移和角度变化
     OrientedPoint move=relPose-m_odoPose;
     move.theta=atan2(sin(move.theta), cos(move.theta));
-    m_linearDistance+=sqrt(move*move);
+
+    //激光雷达在里程计作用下累计移动线性距离和角度变换，用于判断是否进行核心算法处理
+    m_linearDistance+=sqrt(move*move);  //两点之间距离公式
     m_angularDistance+=fabs(move.theta);
     
-    // if the robot jumps throw a warning
-    if (m_linearDistance>m_distanceThresholdCheck){
-      cerr << "***********************************************************************" << endl;
-      cerr << "********** Error: m_distanceThresholdCheck overridden!!!! *************" << endl;
-      cerr << "m_distanceThresholdCheck=" << m_distanceThresholdCheck << endl;
-      cerr << "Old Odometry Pose= " << m_odoPose.x << " " << m_odoPose.y 
-	   << " " <<m_odoPose.theta << endl;
-      cerr << "New Odometry Pose (reported from observation)= " << relPose.x << " " << relPose.y 
-	   << " " <<relPose.theta << endl;
-      cerr << "***********************************************************************" << endl;
-      cerr << "** The Odometry has a big jump here. This is probably a bug in the   **" << endl;
-      cerr << "** odometry/laser input. We continue now, but the result is probably **" << endl;
-      cerr << "** crap or can lead to a core dump since the map doesn't fit.... C&G **" << endl;
-      cerr << "***********************************************************************" << endl;
-    }
-    
+    //更新上一次的里程计位姿
     m_odoPose=relPose;
-    
+    //做返回值使用
     bool processed=false;
 
-    // process a scan only if the robot has traveled a given distance
-    //仅当机器人走过给定的距离时才进行扫描
+    //只有当激光雷达走过一定的距离 或者 旋转一定的角度才处理激光数据 或者 处理第一帧数据
     if (! m_count 
-	|| m_linearDistance>m_linearThresholdDistance 
-	|| m_angularDistance>m_angularThresholdDistance){
-      
-      if (m_outputStream.is_open()){
-	m_outputStream << setiosflags(ios::fixed) << setprecision(6);
-	m_outputStream << "FRAME " <<  m_readingCount;
-	m_outputStream << " " << m_linearDistance;
-	m_outputStream << " " << m_angularDistance << endl;
+	      || m_linearDistance>m_linearThresholdDistance 
+	      || m_angularDistance>m_angularThresholdDistance)
+  {
+      //拷贝reading的scan数据
+      int beam_number = reading.getSize();
+      double * plainReading = new double[beam_number];
+      for(unsigned int i=0; i<beam_number; i++)
+      {
+        plainReading[i] = reading.m_dists[i];
       }
+
+      //reading_copy数据用来放在每一个节点，构建地图用
+      RangeReading* reading_copy = new RangeReading(beam_number,
+                                                                        &(reading.m_dists[0]));
+
       
-      if (m_infoStream)
-	m_infoStream << "update frame " <<  m_readingCount << endl
-		     << "update ld=" << m_linearDistance << " ad=" << m_angularDistance << endl;
+      //如果不是第一帧数据
+      if (m_count>0)
+      {
+        /*功能：为每一个粒子，在当前激光雷达位姿下，当前帧激光数据下，求解每个粒子的位姿最优值（策略：爬山，评价机制：得分机制（当前位姿下激光数据和当前地图的匹配程度））
+                          求解每个粒子的权重
+                          爬山算法：每一层，从不同方向找一个得分最高的一个值，直到出现得分开始下降的地方
+                          得分算法：根据当前位姿下的每一帧激光扫描点和地图的匹配程度，对每一个激光点进行计算，累计得分，返回得分
+        */
+      //进行扫描匹配，得到每个粒子的最优位姿，并且计算粒子得分
+      scanMatch(plainReading);
       
-      
-      cerr << "Laser Pose= " << reading.getPose().x << " " << reading.getPose().y 
-	   << " " << reading.getPose().theta << endl;
-      
-      
-      //this is for converting the reading in a scan-matcher feedable form
-      //将reading 转换为san-matcher的形式
-      assert(reading.size()==m_beams);
-      double * plainReading = new double[m_beams];
-      for(unsigned int i=0; i<m_beams; i++){
-	plainReading[i]=reading[i];
+      //计算重采样的neff（粒子离散程度）的判断值***************还没写******
+	    normalize();
+
+      //重采样
+      if(resample(plainReading, adaptParticles, reading_copy))
+      {
+        //进行重采样之后，粒子的权重又会发生变化，更新归一化的权重
+        normalize();
       }
-      m_infoStream << "m_count " << m_count << endl;
-      if (m_count>0){
-	scanMatch(plainReading);
-	if (m_outputStream.is_open()){
-	  m_outputStream << "LASER_READING "<< reading.size() << " ";
-	  m_outputStream << setiosflags(ios::fixed) << setprecision(2);
-	  for (RangeReading::const_iterator b=reading.begin(); b!=reading.end(); b++){
-	    m_outputStream << *b << " ";
-	  }
-	  OrientedPoint p=reading.getPose();
-	  m_outputStream << setiosflags(ios::fixed) << setprecision(6);
-	  m_outputStream << p.x << " " << p.y << " " << p.theta << " " << reading.getTime()<< endl;
-	  m_outputStream << "SM_UPDATE "<< m_particles.size() << " ";
-	  for (ParticleVector::const_iterator it=m_particles.begin(); it!=m_particles.end(); it++){
-	    const OrientedPoint& pose=it->pose;
-	    m_outputStream << setiosflags(ios::fixed) << setprecision(3) <<  pose.x << " " << pose.y << " ";
-	    m_outputStream << setiosflags(ios::fixed) << setprecision(6) <<  pose.theta << " " << it-> weight << " ";
-	  }
-	  m_outputStream << endl;
-	}
-	onScanmatchUpdate();
-	
-	updateTreeWeights(false);//进行权重归一化，并计算Neff
-				
-	if (m_infoStream){
-	  m_infoStream << "neff= " << m_neff  << endl;
-	}
-	if (m_outputStream.is_open()){
-	  m_outputStream << setiosflags(ios::fixed) << setprecision(6);
-	  m_outputStream << "NEFF " << m_neff << endl;
-	}
-	resample(plainReading, adaptParticles);//执行重采样
-	
-      } else {
-	m_infoStream << "Registering First Scan"<< endl;
-	for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){	
-	  m_matcher.invalidateActiveArea();
-	  m_matcher.computeActiveArea(it->map, it->pose, plainReading);
-	  m_matcher.registerScan(it->map, it->pose, plainReading);
-	  
-	  // cyr: not needed anymore, particles refer to the root in the beginning!
-	  TNode* node=new	TNode(it->pose, 0., it->node,  0);
-	  node->reading=0;
-	  it->node=node;
-	  
-	}
       }
-      //		cerr  << "Tree: normalizing, resetting and propagating weights at the end..." ;
-      updateTreeWeights(false);
-      //		cerr  << ".done!" <<endl;
-      
-      delete [] plainReading;
-      m_lastPartPose=m_odoPose; //update the past pose for the next iteration
+      //如果是第一帧数据
+    else
+    {
+    }
+    
+    delete [] plainReading;
+ 
       m_linearDistance=0;
       m_angularDistance=0;
       m_count++;
       processed=true;
       
-      //keep ready for the next step
-      for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
-	it->previousPose=it->pose;
-      }
-      
     }
-    if (m_outputStream.is_open())
-      m_outputStream << flush;
-    m_readingCount++;
     return processed;
   }
   //**************************************************************processScan*******************************************************

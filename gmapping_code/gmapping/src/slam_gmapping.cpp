@@ -1,122 +1,3 @@
-/*
- * slam_gmapping
- * Copyright (c) 2008, Willow Garage, Inc.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *   * Redistributions of source code must retain the above copyright notice,
- *     this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *   * Neither the names of Stanford University or Willow Garage, Inc. nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
-/* Author: Brian Gerkey */
-/* Modified by: Charles DuHadway */
-
-
-/**
-
-@mainpage slam_gmapping
-
-@htmlinclude manifest.html
-
-@b slam_gmapping is a wrapper around the GMapping SLAM library. It reads laser
-scans and odometry and computes a map. This map can be
-written to a file using e.g.
-
-  "rosrun map_server map_saver static_map:=dynamic_map"
-
-<hr>
-
-@section topic ROS topics
-
-Subscribes to (name/type):
-- @b "scan"/<a href="../../sensor_msgs/html/classstd__msgs_1_1LaserScan.html">sensor_msgs/LaserScan</a> : data from a laser range scanner 
-- @b "/tf": odometry from the robot
-
-
-Publishes to (name/type):
-- @b "/tf"/tf/tfMessage: position relative to the map
-
-
-@section services
- - @b "~dynamic_map" : returns the map
-
-
-@section parameters ROS parameters
-
-Reads the following parameters from the parameter server
-
-Parameters used by our GMapping wrapper:
-
-- @b "~throttle_scans": @b [int] throw away every nth laser scan
-- @b "~base_frame": @b [string] the tf frame_id to use for the robot base pose
-- @b "~map_frame": @b [string] the tf frame_id where the robot pose on the map is published
-- @b "~odom_frame": @b [string] the tf frame_id from which odometry is read
-- @b "~map_update_interval": @b [double] time in seconds between two recalculations of the map
-
-
-Parameters used by GMapping itself:
-
-Laser Parameters:
-- @b "~/maxRange" @b [double] maximum range of the laser scans. Rays beyond this range get discarded completely. (default: maximum laser range minus 1 cm, as received in the the first LaserScan message)
-- @b "~/maxUrange" @b [double] maximum range of the laser scanner that is used for map building (default: same as maxRange)
-- @b "~/sigma" @b [double] standard deviation for the scan matching process (cell)
-- @b "~/kernelSize" @b [int] search window for the scan matching process
-- @b "~/lstep" @b [double] initial search step for scan matching (linear)
-- @b "~/astep" @b [double] initial search step for scan matching (angular)
-- @b "~/iterations" @b [int] number of refinement steps in the scan matching. The final "precision" for the match is lstep*2^(-iterations) or astep*2^(-iterations), respectively.
-- @b "~/lsigma" @b [double] standard deviation for the scan matching process (single laser beam)
-- @b "~/ogain" @b [double] gain for smoothing the likelihood
-- @b "~/lskip" @b [int] take only every (n+1)th laser ray for computing a match (0 = take all rays)
-- @b "~/minimumScore" @b [double] minimum score for considering the outcome of the scanmatching good. Can avoid 'jumping' pose estimates in large open spaces when using laser scanners with limited range (e.g. 5m). (0 = default. Scores go up to 600+, try 50 for example when experiencing 'jumping' estimate issues)
-
-Motion Model Parameters (all standard deviations of a gaussian noise model)
-- @b "~/srr" @b [double] linear noise component (x and y)
-- @b "~/stt" @b [double] angular noise component (theta)
-- @b "~/srt" @b [double] linear -> angular noise component
-- @b "~/str" @b [double] angular -> linear noise component
-
-Others:
-- @b "~/linearUpdate" @b [double] the robot only processes new measurements if the robot has moved at least this many meters
-- @b "~/angularUpdate" @b [double] the robot only processes new measurements if the robot has turned at least this many rads
-
-- @b "~/resampleThreshold" @b [double] threshold at which the particles get resampled. Higher means more frequent resampling.
-- @b "~/particles" @b [int] (fixed) number of particles. Each particle represents a possible trajectory that the robot has traveled
-
-Likelihood sampling (used in scan matching)
-- @b "~/llsamplerange" @b [double] linear range
-- @b "~/lasamplerange" @b [double] linear step size
-- @b "~/llsamplestep" @b [double] linear range
-- @b "~/lasamplestep" @b [double] angular step size
-
-Initial map dimensions and resolution:
-- @b "~/xmin" @b [double] minimum x position in the map [m]
-- @b "~/ymin" @b [double] minimum y position in the map [m]
-- @b "~/xmax" @b [double] maximum x position in the map [m]
-- @b "~/ymax" @b [double] maximum y position in the map [m]
-- @b "~/delta" @b [double] size of one pixel [m]
-
-*/
-
-
 
 #include "slam_gmapping.h"
 
@@ -139,6 +20,7 @@ Initial map dimensions and resolution:
 // compute linear index for given map coords
 #define MAP_IDX(sx, i, j) ((sx) * (j) + (i))
 
+//构造函数-初始化相关变量，比如指针初始化
 SlamGMapping::SlamGMapping():
   map_to_odom_(tf::Transform(tf::createQuaternionFromRPY( 0, 0, 0 ), tf::Point(0, 0, 0 ))),
   laser_count_(0), private_nh_("~"), scan_filter_sub_(NULL), scan_filter_(NULL), transform_thread_(NULL)
@@ -163,27 +45,21 @@ SlamGMapping::SlamGMapping(long unsigned int seed, long unsigned int max_duratio
   init();
 }
 
-
+//slamgmapping的初始化，主要用来读取配置文件写入的参数
 void SlamGMapping::init()
 {
-  // log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(ros::console::g_level_lookup[ros::console::levels::Debug]);
-
-  // The library is pretty chatty
-  //gsp_ = new GMapping::GridSlamProcessor(std::cerr);
+  //new一个GridSlamProessor对象，也是ros和gridslam的连接
   gsp_ = new GMapping::GridSlamProcessor();
-  ROS_ASSERT(gsp_);
-
+  //new一个TransformBroadcaster对象，用来发布map与odom的关系
   tfB_ = new tf::TransformBroadcaster();
   ROS_ASSERT(tfB_);
-
-  gsp_laser_ = NULL;
-  gsp_odom_ = NULL;
 
   got_first_scan_ = false;
   got_map_ = false;
   
   
   // Parameters used by our GMapping wrapper
+  //GMapping算法本身使用的参数
   if(!private_nh_.getParam("throttle_scans", throttle_scans_))
     throttle_scans_ = 1;
   if(!private_nh_.getParam("base_frame", base_frame_))
@@ -270,12 +146,14 @@ void SlamGMapping::init()
 // ③ geometry_msgs/PoseWithCovariance pose 位姿 ④ geometry_msgs/TwistWithCovariance twist 速度
 
 //Path路径：①Header header ②geometry_msgs/PoseStamped[] poses 代表路径的三维点的坐标数组
-//开始实时SLAM
+
+//**************************************************************************************************************
+//**********************************************************************************startLiveSlam( )***************
 void SlamGMapping::startLiveSlam()
 {
   //发布消息类型为std_msgs::Float64的话题entropy,队列长度为1，这是机器人姿态分布的熵的估计值，值越大表示较大的不确定性
   //这三个参数分别表示话题的名称，队列的长度，是否发布消息
-  entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
+  //entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
   sst_ = node_.advertise<nav_msgs::OccupancyGrid>("map", 1, true);//OccupancyGrid  2d栅格地图 ：
   //①Header header | ②nav_msgs/MapMetaData info 地图信息 | ③int8[] data 占有率地图数据序列，概率为【0-100】，未知为-1
   //MapMetaData  占有率栅格地图数据 ：
@@ -285,86 +163,19 @@ void SlamGMapping::startLiveSlam()
   //发布一个/map_metadata的话题，消息类型为：nav_msgs::MapMetaData 即占有率栅格地图数据
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
   //发布一个/dynamic_map的服务，一旦有服务请求，进入回调函数
-
+  
   scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "scan", 5);
   //message_filters::Subscriber<sensor_msgs::LaserScan>* scan_filter_sub_;
   scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
   //tf::MessageFilter<sensor_msgs::LaserScan>* scan_filter_;
   scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
   //注册回调函数，this表示当前对象scan_filter_，_1表示占位符
+  
+  //发布map到odom的转换关系的线程
   transform_thread_ = new boost::thread(boost::bind(&SlamGMapping::publishLoop, this, transform_publish_period_));
-  //开始一个线程 不太懂......
+
 }
-
-void SlamGMapping::startReplay(const std::string & bag_fname, std::string scan_topic)
-{
-  double transform_publish_period;
-  ros::NodeHandle private_nh_("~");
-  entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
-  sst_ = node_.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
-  sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
-  ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
-  
-  rosbag::Bag bag;
-  bag.open(bag_fname, rosbag::bagmode::Read);
-  
-  std::vector<std::string> topics;
-  topics.push_back(std::string("/tf"));
-  topics.push_back(scan_topic);
-  rosbag::View viewall(bag, rosbag::TopicQuery(topics));
-
-  // Store up to 5 messages and there error message (if they cannot be processed right away)
-  std::queue<std::pair<sensor_msgs::LaserScan::ConstPtr, std::string> > s_queue;
-  foreach(rosbag::MessageInstance const m, viewall)
-  {
-    tf::tfMessage::ConstPtr cur_tf = m.instantiate<tf::tfMessage>();
-    if (cur_tf != NULL) {
-      for (size_t i = 0; i < cur_tf->transforms.size(); ++i)
-      {
-        geometry_msgs::TransformStamped transformStamped;
-        tf::StampedTransform stampedTf;
-        transformStamped = cur_tf->transforms[i];
-        tf::transformStampedMsgToTF(transformStamped, stampedTf);
-        tf_.setTransform(stampedTf);
-      }
-    }
-
-    sensor_msgs::LaserScan::ConstPtr s = m.instantiate<sensor_msgs::LaserScan>();
-    if (s != NULL) {
-      if (!(ros::Time(s->header.stamp)).is_zero())
-      {
-        s_queue.push(std::make_pair(s, ""));
-      }
-      // Just like in live processing, only process the latest 5 scans
-      if (s_queue.size() > 5) {
-        ROS_WARN_STREAM("Dropping old scan: " << s_queue.front().second);
-        s_queue.pop();
-      }
-      // ignoring un-timestamped tf data 
-    }
-
-    // Only process a scan if it has tf data
-    while (!s_queue.empty())
-    {
-      try
-      {
-        tf::StampedTransform t;
-        tf_.lookupTransform(s_queue.front().first->header.frame_id, odom_frame_, s_queue.front().first->header.stamp, t);
-        this->laserCallback(s_queue.front().first);
-        s_queue.pop();
-      }
-      // If tf does not have the data yet
-      catch(tf2::TransformException& e)
-      {
-        // Store the error to display it if we cannot process the data after some time
-        s_queue.front().second = std::string(e.what());
-        break;
-      }
-    }
-  }
-
-  bag.close();
-}
+//**********************************************************************************startLiveSlam( )***************
 
 void SlamGMapping::publishLoop(double transform_publish_period){
   if(transform_publish_period == 0)
@@ -395,32 +206,39 @@ SlamGMapping::~SlamGMapping()
     delete scan_filter_sub_;
 }
 
-bool
-SlamGMapping::getOdomPose(GMapping::OrientedPoint& gmap_pose, const ros::Time& t)
+//***********************************************************************************getOdomPose*****************
+//通过每一帧scan的时间戳，计算出当前里程计坐标系下激光雷达的位姿
+bool SlamGMapping::getOdomPose(GMapping::OrientedPoint& gmap_pose, const ros::Time& t)
 {
   // Get the pose of the centered laser at the right time
-  centered_laser_pose_.stamp_ = t;
-  // Get the laser's pose that is centered
-  tf::Stamped<tf::Transform> odom_pose;
+  //centered_laser_pose_.stamp_ = t;
+  tf::Stamped<tf::Pose> ident (tf::Transform(tf::creatQurationFromRPY(0, 0, 0), tf::Vector3(0, 0, 0)), t, laser_frame_);
+  
+  //odom_pose存储输出的里程计坐标系下激光雷达tf::Stamped<tf::Pose>格式的位姿
+  tf::Stamped<tf::Transform> odom_pose; 
   try
   {
-    tf_.transformPose(odom_frame_, centered_laser_pose_, odom_pose);
+    //odom_frame_ 目标坐标系
+    //ident 传入时间戳和坐标系(laser frame)
+    //odom_pose得到该时间戳下的位姿数据
+    tf_.transformPose(odom_frame_, ident, odom_pose);
   }
   catch(tf::TransformException e)
   {
     ROS_WARN("Failed to compute odom pose, skipping scan (%s)", e.what());
     return false;
   }
-  double yaw = tf::getYaw(odom_pose.getRotation());
 
+  //通过转化得到OrientedPoint格式的里程计坐标系下的位姿
+  double yaw = tf::getYaw(odom_pose.getRotation());
   gmap_pose = GMapping::OrientedPoint(odom_pose.getOrigin().x(),
                                       odom_pose.getOrigin().y(),
                                       yaw);
   return true;
 }
 
-bool
-SlamGMapping::initMapper(const sensor_msgs::LaserScan& scan)
+
+bool SlamGMapping::initMapper(const sensor_msgs::LaserScan& scan)
 {
   laser_frame_ = scan.header.frame_id;
   // Get the laser's pose, relative to base.
@@ -557,19 +375,21 @@ SlamGMapping::initMapper(const sensor_msgs::LaserScan& scan)
   return true;
 }
 
-bool
+//************************************************************************************addScan函数********************
 //addScan函数，参数：scan、odom_pose(里程计位姿)
-SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoint& gmap_pose)
+//每一帧激光数据，都要通过该函数封装gmapping算法需要的数据格式，并调用核心算法
+bool SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoint& gmap_pose)
 {
+  //得到与激光数据的时间戳相对应的里程计位姿gmap_pose
   if(!getOdomPose(gmap_pose, scan.header.stamp))
      return false;
   
-  if(scan.ranges.size() != gsp_laser_beam_count_)
-    return false;
-
   // GMapping wants an array of doubles...
   //Gampping需要一个双精度的数组
+  //对一帧激光数据的预处理，对距离小于range_min的数据，最大化
   double* ranges_double = new double[scan.ranges.size()];
+
+  //开始处理
   // If the angle increment is negative, we have to invert the order of the readings.
   //如果角度增量是负的，我们就要颠倒读数的顺序
   if (do_reverse_range_)
@@ -578,7 +398,7 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
     int num_ranges = scan.ranges.size();
     for(int i=0; i < num_ranges; i++)
     {
-      // Must filter out short readings, because the mapper won't
+      // 对距离小于range_min的数据，最大化
       if(scan.ranges[num_ranges - i - 1] < scan.range_min)
         ranges_double[i] = (double)scan.range_max;
       else
@@ -588,7 +408,7 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
   {
     for(unsigned int i=0; i < scan.ranges.size(); i++)
     {
-      // Must filter out short readings, because the mapper won't
+      // 对距离小于range_min的数据，最大化
       if(scan.ranges[i] < scan.range_min)
         ranges_double[i] = (double)scan.range_max;
       else
@@ -596,68 +416,59 @@ SlamGMapping::addScan(const sensor_msgs::LaserScan& scan, GMapping::OrientedPoin
     }
   }
 
+  //把ROS的激光雷达数据信息转换为GMapping算法看得懂的形式
   GMapping::RangeReading reading(scan.ranges.size(),
                                  ranges_double,
                                  gsp_laser_,
                                  scan.header.stamp.toSec());
-  //但是在rangereading构造函数中深度复制它们，因此我们不需要保留数组
-  // ...but it deep copies them in RangeReading constructor, so we don't
-  // need to keep our array around.
+  //释放内存
   delete[] ranges_double;
 
+  //为每一个reading设置里程计位姿
   reading.setPose(gmap_pose);
 
-  /*
-  ROS_DEBUG("scanpose (%.3f): %.3f %.3f %.3f\n",
-            scan.header.stamp.toSec(),
-            gmap_pose.x,
-            gmap_pose.y,
-            gmap_pose.theta);
-            */
-  ROS_DEBUG("processing scan");
-
-  return gsp_->processScan(reading);  //*********************************************进入processScan函数*********************************
+  //调用gmappig算法进行处理，传入reading
+  return gsp_->processScan(reading);  //*************此处进入processScan函数*******************
 }
-//addscan()函数只是将获取到的scan消息作下一步处理，过滤到无效值，将处理过的数据传入processScan()函数，这个函数如果在ros上安装了gmapping包，在ros路径下找到
+//addscan()函数只是将获取到的scan消息作下一步处理，转换成gmapping需要的形式，将处理过的数据传入processScan()函数
 
-void
-SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
+
+//************************************************************************************laserCallback***************
+//每当到达一帧scan数据，就调用laserCallback函数
+void SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 {
-  laser_count_++;
-  if ((laser_count_ % throttle_scans_) != 0)
-    return;
-
-  static ros::Time last_map_update(0,0);
+  static ros::Time last_map_update(0,0);    //上次地图更新时间
 
   // We can't initialize the mapper until we've got the first scan
-  if(!got_first_scan_)       //判断got_first_scan是否为第一帧数据
+  if(!got_first_scan_)                                            //判断got_first_scan是否为第一帧数据
   {
-    if(!initMapper(*scan))   //判断为是，调用initMapper初始化gmapping所需各种参数
+    if(!initMapper(*scan))                                    //判断为是，调用initMapper初始化gmapping所需各种参数
       return;
-    got_first_scan_ = true;
+    got_first_scan_ = true;                                  //改变第一帧的标志位
   }
 
-  GMapping::OrientedPoint odom_pose;
+  GMapping::OrientedPoint odom_pose;   //当前里程计坐标系下的激光雷达位姿的临时变量
 
   if(addScan(*scan, odom_pose))   //调用addScan函数，可以进入到addScan函数看一下
   //addScan函数只是将获取到的scan消息做下一步处理，过滤掉无效值，将处理过的数据传入processScan( )函数中执行gmapping算法流程
   {
     ROS_DEBUG("scan processed");
-
+    
+    //最优粒子，地图坐标系下的位姿
     GMapping::OrientedPoint mpose = gsp_->getParticles()[gsp_->getBestParticleIndex()].pose;//不太理解
-    //GMapping::GridSlamProcessor* gsp_; 
-    ROS_DEBUG("new best pose: %.3f %.3f %.3f", mpose.x, mpose.y, mpose.theta);
-    ROS_DEBUG("odom pose: %.3f %.3f %.3f", odom_pose.x, odom_pose.y, odom_pose.theta);
-    ROS_DEBUG("correction: %.3f %.3f %.3f", mpose.x - odom_pose.x, mpose.y - odom_pose.y, mpose.theta - odom_pose.theta);
-
+    
+    //在激光雷达当前位姿下，用当前的里程计坐标系下的激光雷达位姿和map坐标系下的激光雷达位姿，来表述里程计坐标系与map坐标系的差距
+    //因为两个坐标系描述的是同一激光雷达，所以才能用位姿的不同描述坐标系变换关系
     tf::Transform laser_to_map = tf::Transform(tf::createQuaternionFromRPY(0, 0, mpose.theta), tf::Vector3(mpose.x, mpose.y, 0.0)).inverse();
     tf::Transform odom_to_laser = tf::Transform(tf::createQuaternionFromRPY(0, 0, odom_pose.theta), tf::Vector3(odom_pose.x, odom_pose.y, 0.0));
-    //不理解
-
+    
+    //多个线程访问同一资源时，为了保证数据一致性，最简单的方式就是使用mutex（互斥锁）
+    //阻止了同一时刻有多个线程并发访问共享资源
     map_to_odom_mutex_.lock();
-    map_to_odom_ = (odom_to_laser * laser_to_map).inverse();
+    map_to_odom_ = (odom_to_laser * laser_to_map).inverse(); //表述里程计坐标系与map坐标系的差距
     map_to_odom_mutex_.unlock();
 
+    //多久更新一次地图
     if(!got_map_ || (scan->header.stamp - last_map_update) > map_update_interval_)
     {
       updateMap(*scan);  //调用updateMap更新地图**********************************************************updateMap********************************************************
@@ -668,34 +479,19 @@ SlamGMapping::laserCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
     ROS_DEBUG("cannot process scan");
 }
 
-double
-SlamGMapping::computePoseEntropy()
-{
-  double weight_total=0.0;
-  for(std::vector<GMapping::GridSlamProcessor::Particle>::const_iterator it = gsp_->getParticles().begin();
-      it != gsp_->getParticles().end();
-      ++it)
-  {
-    weight_total += it->weight;
-  }
-  double entropy = 0.0;
-  for(std::vector<GMapping::GridSlamProcessor::Particle>::const_iterator it = gsp_->getParticles().begin();
-      it != gsp_->getParticles().end();
-      ++it)
-  {
-    if(it->weight/weight_total > 0.0)
-      entropy += it->weight/weight_total * log(it->weight/weight_total);
-  }
-  return -entropy;
-}
 
-void
-SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
+//************************************************************************************updateMap************
+//地图更新，第一次没有地图直接更新，之后按照周期更新地图
+void SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
 {
   ROS_DEBUG("Update map");
+  //scoped_lock:严格基于作用域的锁管理类模板
+  //构造时是否加锁是可选的（不加锁时假定当前线程已经获得锁的所有权），析构时自动释放锁，所有权不可转移
+  //对象生存期内不允许手动加锁和释放锁
   boost::mutex::scoped_lock map_lock (map_mutex_);
   GMapping::ScanMatcher matcher;
 
+  //设置scanmatcher的各个参数
   matcher.setLaserParameters(scan.ranges.size(), &(laser_angles_[0]),
                              gsp_laser_->getPose());
 
@@ -703,13 +499,11 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
   matcher.setusableRange(maxUrange_);
   matcher.setgenerateMap(true);
 
+  //得到权重最高的粒子
   GMapping::GridSlamProcessor::Particle best =
           gsp_->getParticles()[gsp_->getBestParticleIndex()];
-  std_msgs::Float64 entropy;
-  entropy.data = computePoseEntropy();
-  if(entropy.data > 0.0)
-    entropy_publisher_.publish(entropy);
 
+  //如果没有地图则初始化一个地图
   if(!got_map_) {
     map_.map.info.resolution = delta_;
     map_.map.info.origin.position.x = 0.0;
@@ -720,15 +514,20 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
     map_.map.info.origin.orientation.z = 0.0;
     map_.map.info.origin.orientation.w = 1.0;
   } 
-
+  //地图的中点
   GMapping::Point center;
   center.x=(xmin_ + xmax_) / 2.0;
   center.y=(ymin_ + ymax_) / 2.0;
-
+  
+  //初始化一个ScanMatcherMap，创建一个地图
+  //这里地图一定要区分part_slam算法部分的地图，这里可视化用
+  //区别smap与map_.map这个非常重要
   GMapping::ScanMatcherMap smap(center, xmin_, ymin_, xmax_, ymax_, 
                                 delta_);
 
   ROS_DEBUG("Trajectory tree:");
+  
+  //遍历粒子的整条轨迹，按照轨迹上各个节点存储的信息来重新绘制一个地图
   for(GMapping::GridSlamProcessor::TNode* n = best.node;
       n;
       n = n->parent)
@@ -743,11 +542,13 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
       continue;
     }
     matcher.invalidateActiveArea();
+    //拓展地图大小，找到地图中有效区域，申请内存，更新每个被经过的栅格数据
     matcher.computeActiveArea(smap, n->pose, &((*n->reading)[0]));
     matcher.registerScan(smap, n->pose, &((*n->reading)[0]));
   }
 
   // the map may have expanded, so resize ros message as well
+  //根据smap地图更改可视化地图的内容
   if(map_.map.info.width != (unsigned int) smap.getMapSizeX() || map_.map.info.height != (unsigned int) smap.getMapSizeY()) {
 
     // NOTE: The results of ScanMatcherMap::getSize() are different from the parameters given to the constructor
@@ -769,6 +570,7 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
     ROS_DEBUG("map origin: (%f, %f)", map_.map.info.origin.position.x, map_.map.info.origin.position.y);
   }
 
+  //根据smap地图中存储的栅格数据，修改map_.map.data[]的数据，这里为一维数组
   for(int x=0; x < smap.getMapSizeX(); x++)
   {
     for(int y=0; y < smap.getMapSizeY(); y++)
@@ -777,29 +579,33 @@ SlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
       GMapping::IntPoint p(x, y);
       double occ=smap.cell(p);
       assert(occ <= 1.0);
+      //未知
       if(occ < 0)
         map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = -1;
+        //占用
       else if(occ > occ_thresh_)
       {
         //map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = (int)round(occ*100.0);
         map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = 100;
       }
+      //空闲
       else
         map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = 0;
     }
   }
   got_map_ = true;
 
-  //make sure to set the header information on the map
+  //把计算出来的地图发布出去
   map_.map.header.stamp = ros::Time::now();
   map_.map.header.frame_id = tf_.resolve( map_frame_ );
 
+  //发布map和map_metadata
   sst_.publish(map_.map);
   sstm_.publish(map_.map.info);
 }
 
-bool 
-SlamGMapping::mapCallback(nav_msgs::GetMap::Request  &req,
+//地图服务的回调函数 
+bool SlamGMapping::mapCallback(nav_msgs::GetMap::Request  &req,
                           nav_msgs::GetMap::Response &res)
 {
   boost::mutex::scoped_lock map_lock (map_mutex_);
@@ -812,6 +618,7 @@ SlamGMapping::mapCallback(nav_msgs::GetMap::Request  &req,
     return false;
 }
 
+//发布map->odom的转换关系
 void SlamGMapping::publishTransform()
 {
   map_to_odom_mutex_.lock();

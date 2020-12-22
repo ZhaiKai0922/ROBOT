@@ -93,7 +93,7 @@ namespace GMapping {
     m_count=0;
     m_linearDistance=m_angularDistance=0;
   }
-
+//******************************************************************************************************processScan*******************
   bool GridSlamProcessor::processScan(const RangeReading & reading, int adaptParticles)
   {
     /*得到当前激光雷达里程计位姿*/

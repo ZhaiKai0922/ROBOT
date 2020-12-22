@@ -324,7 +324,7 @@ void MySlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
     /*得到权重最高的粒子*/
     GMapping::GridSlamProcessor::Particle best = gsp_->getParticles()[gsp_->getBestParticleIndex()];
 
-    //如果没有地图 则初始化一个地图，连地图map_.map的长宽都没初始化
+    //如果没有地图则初始化一个地图，连地图map_.map的长宽都没初始化
     if(!got_map_)
     {
         map_.map.info.resolution = delta_;
@@ -348,7 +348,7 @@ void MySlamGMapping::updateMap(const sensor_msgs::LaserScan& scan)
     GMapping::ScanMatcherMap smap(center, xmin_, ymin_, xmax_, ymax_,delta_);
 
     //遍历粒子的整条轨迹 按照轨迹上各个节点存储的信息来重新绘制一个地图
-    for(GMapping::GridSlamProcessor::TNode* n = best.node;n;n = n->parent)
+    for(GMapping::GridSlamProcessor::TNode* n = best.node; n; n = n->parent)
     {
         if(!n->reading)
         {
