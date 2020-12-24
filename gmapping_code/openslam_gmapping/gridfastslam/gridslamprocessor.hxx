@@ -11,36 +11,27 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading){
   // sample a new pose from each scan in the reference
   //通过参考帧来搜寻局部最优位姿
 
-  double sumScore=0;
-  for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++){
+  for (ParticleVector::iterator it=m_particles.begin(); it!=m_particles.end(); it++)
+  {
     OrientedPoint corrected;
     double score, l, s;
+    //爬山算法，score最优位姿的最大匹配得分
     score=m_matcher.optimize(corrected, it->map, it->pose, plainReading);//**************************调用optimize函数执行盘山算法搜寻局部最优位姿****************
-    //用最优位姿替换掉原来的位姿
-    //    it->pose=corrected;
-    if (score>m_minimumScore){
-      it->pose=corrected;
-    } else {
-	if (m_infoStream){
-	  m_infoStream << "Scan Matching Failed, using odometry. Likelihood=" << l <<std::endl;
-	  m_infoStream << "lp:" << m_lastPartPose.x << " "  << m_lastPartPose.y << " "<< m_lastPartPose.theta <<std::endl;
-	  m_infoStream << "op:" << m_odoPose.x << " " << m_odoPose.y << " "<< m_odoPose.theta <<std::endl;
-	}
+    
+    //用最优位姿替换掉原来的位姿，即更新粒子计算出的激光雷达最优位姿（地图坐标系）
+    if (score>m_minimumScore)
+    {
+      m_particles[i].pose=corrected;
     }
 
-    //利用likelihood_field_range_finder_model计算每个粒子的权重
-    m_matcher.likelihoodAndScore(s, l, it->map, it->pose, plainReading);
-    sumScore+=score;
-    it->weight+=l;
-    it->weightSum+=l;
+    //输入当前地图和当前最优位姿，遍历激光束累计似然，把累计似然当作该粒子的权重，误差越小，似然越大
+    //似然大小，代表权重大小
+    m_matcher.likelihoodAndScore(s, l, m_particles[i].map, m_particles[i].pose, plainReading);
+    //为每个粒子更新权重和累计权重
+    m_particles[i].weight+=l;           //该粒子的权重
+    m_particles[i].weightSum+=l;  //该粒子的累计权重，寻找最优粒子用
 
-    //set up the selective copy of the active area
-    //by detaching the areas that will be updated
-    m_matcher.invalidateActiveArea();
-    m_matcher.computeActiveArea(it->map, it->pose, plainReading);
   }
-  if (m_infoStream)
-    m_infoStream << "Average Scan Matching Score=" << sumScore/m_particles.size() << std::endl;	
 }
 //****************************************************************************************************scanMatch******************************************************************
 

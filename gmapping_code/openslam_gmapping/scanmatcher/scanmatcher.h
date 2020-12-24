@@ -136,16 +136,28 @@ inline double ScanMatcher::icpStep(OrientedPoint & pret, const ScanMatcherMap& m
 	return score(map, p, readings);
 }
 
-inline double ScanMatcher::score(const ScanMatcherMap& map, const OrientedPoint& p, const double* readings) const{
+//****************************************************************************************************************
+//输入当前地图和当前经过运动模型更新的激光雷达位姿P，以及激光雷达数据
+//遍历若干激光束，求当前激光雷达位姿p，在当前地图的匹配得分，越匹配位姿得分越高
+//匹配的方式：击中点和九宫格中的点的差距最小的点，差距越小，得分越高，越匹配，并且历遍若干激光数据，计算累计得分
+inline double ScanMatcher::score(const ScanMatcherMap& map, const OrientedPoint& p, const double* readings) const
+{
 	double s=0;
 	const double * angle=m_laserAngles+m_initialBeamsSkip;
+	// lp表示此刻激光雷达坐标系在地图坐标系下的坐标
 	OrientedPoint lp=p;
+
 	lp.x+=cos(p.theta)*m_laserPose.x-sin(p.theta)*m_laserPose.y;
 	lp.y+=sin(p.theta)*m_laserPose.x+cos(p.theta)*m_laserPose.y;
 	lp.theta+=m_laserPose.theta;
+
+	//如果激光束击中了某个点，那么沿着激光方向的freeDelta距离的地方要有空闲才可以
 	unsigned int skip=0;
-	double freeDelta=map.getDelta()*m_freeCellRatio;
-	for (const double* r=readings+m_initialBeamsSkip; r<readings+m_laserBeams; r++, angle++){
+	double freeDelta=map.getDelta()*m_freeCellRatio;//默认0.05*1.414的距离，表示斜着一个栅格的差距
+
+	//枚举所有的激光束，有时为了提高计算速度，不需要对所有的激光雷达数据进行计算
+	for (const double* r=readings+m_initialBeamsSkip; r<readings+m_laserBeams; r++, angle++)
+	{
 		skip++;
 		skip=skip>m_likelihoodSkip?0:skip;
 		if (*r>m_usableRange) continue;
@@ -184,6 +196,7 @@ inline double ScanMatcher::score(const ScanMatcherMap& map, const OrientedPoint&
 	}
 	return s;
 }
+//****************************************************************************************************************
 
 inline unsigned int ScanMatcher::likelihoodAndScore(double& s, double& l, const ScanMatcherMap& map, const OrientedPoint& p, const double* readings) const{
 	using namespace std;

@@ -219,6 +219,7 @@ inline void GridSlamProcessor::scanMatch(const double* plainReading)
     {
       m_particles[i].pose = corrected;
     }
+    
     //输入当前地图和当前最优位姿，遍历激光束累计似然，把累计似然当作该粒子的权重，误差越小，似然越大
     //似然大小，代表权重大小
     m_matcher.likelihoodAndScore(s, l, m_particles[i].map, m_particles[i].pose, plainReading);

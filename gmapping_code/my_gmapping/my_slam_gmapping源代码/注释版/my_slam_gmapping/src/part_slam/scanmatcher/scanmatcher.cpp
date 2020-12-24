@@ -144,8 +144,8 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 			//差距越大，odo_gain越小，小于1也就产生了惩罚
             if (m_angularOdometryReliability>0.)
             {
-                double dth=init.theta-localPose.theta; 	
-				dth=atan2(sin(dth), cos(dth)); 	
+                double dth=init.theta-localPose.theta;
+				dth=atan2(sin(dth), cos(dth));
 				dth*=dth;
                 odo_gain*=exp(-m_angularOdometryReliability*dth);
             }

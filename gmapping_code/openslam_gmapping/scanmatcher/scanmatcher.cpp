@@ -328,6 +328,7 @@ double ScanMatcher::icpOptimize(OrientedPoint& pnew, const ScanMatcherMap& map, 
 	return currentScore;
 }
 
+//********************************************************************optimize( )************************************
 double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, const OrientedPoint& init, const double* readings) const{
 	double bestScore=-1;
 	OrientedPoint currentPose=init;
@@ -412,6 +413,7 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 	pnew=currentPose;
 	return bestScore;
 }
+//**********************************************************************optimize( )*********************************
 
 struct ScoredMove{
 	OrientedPoint pose;
