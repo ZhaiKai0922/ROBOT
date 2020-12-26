@@ -21,7 +21,7 @@ int main()
                 cout<<"ERROR"<<endl;
                 break;
             }
-            cout<<"perfect"<<endl;
+            cout<<"perfect"<<endl;//当mark=100时
             break;  
         }
         case 4:  //当mark输入80~99时
@@ -52,11 +52,11 @@ int main()
 
 ## 2. 运行结果
 
-![image-20201225165128788](/home/zk/zk/ROBOT/learn/c++/image-20201225165128788.png)
+![image-20201225165128788](/home/zhx/zk/ROBOT/learn/c++/image-20201225165128788.png)
 
 # Explanation of enum
 
-## 1. 示例
+## 1. 枚举量的声明和定义
 
 ```cpp
 enum enumType{Monday, TuesDay, Wednesday, Thursday, Friday, Saturday, Sunday}
@@ -84,8 +84,65 @@ int a;
 int a = 1 + Monday;  //这是允许的，因为编译器会自动将枚举量转换为int型
 
 //我们如何通过强制转换将 非枚举量 赋值给 枚举变量 呢？
+Weekday = enumType(2);//等同于Ｗeekday=Ｗednesday;
+                     //但是，如果试图将一个超出枚举取值范围的值通过强制转换赋给枚举变量，会出现什么后果呢？
+Weekday = enumType(20); //结果将是不确定的，这么做不会出错，但是得不到想要的结果
+```
+
+## 2. 自定义枚举量的值
+
+```cpp
+//前面讲通过定义 enum enumType {Monday, Ｔuesday, Wednesday, Thursday, Friday, Saturday, Sunday}
+//枚举量Ｍonday,Tuesday等的值默认分别为0-6，我们可以显式的设置枚举量的值
+enum enumType {Monday=1, Tuesday=2, wednesday=3, Thursday=4, Friday=5, Saturday=6, Sunday=7}
+//注意指定的值必须是整数
+
+//当然也可以显式的定义一部分枚举量的值
+enum enumType {Monday=1, Tuesday, Wednesday=1,Thursday,Friday,Saturday,Sunday};
+//这样Monday、Ｗednesday均被定义为１，则Tuesday=2,Thursday,Wednesday,Friday,Saturday,Sunday的值分别默认为２、３、４、５
+//总结：未被初始化的枚举值的默认值将比其他前面的枚举值大１
+//同时，我们也可以看出枚举量的值可以是相同的
+```
+
+## 3. 枚举的取值范围
+
+前面讲到可以通过强制转换将其他类型值赋给枚举变量：Ｗeekday=enumType(2); 这是合法的；但是Weekday=enumType(20);这是非法的。
+
+这里涉及枚举取值范围的概念：枚举的上限是　**大于最大枚举量的　最小的２的幂　减去１**（例如最大枚举量的值为５，大于最大枚举量且为２的幂：８，减去１，为７，所以枚举取值的上限为７）;
+
+枚举的下限有两种情况：一、枚举量的最小值不小于０，则下限取值为０；二、枚举量的最小值取值小于０，则枚举的下限是　**小于最小枚举量的　最大的２的幂　加上１**
+
+举例来讲：
+
+```cpp
+enum enumType1{First=-5, Second=14, Third=10};
+//则枚举的上限是16-1=15,枚举的下限是-8+1=-7
+```
+
+## 4. 枚举的应用
+
+个人觉得**枚举**和**switch**是最好的搭档
+
+```cpp
+enum enumType{Step0, Step1, Step2, Step3, Step4};
+enumType Step;
+Step = Step0;
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://blog.csdn.net/songsong2017/article/details/84103565?ops_request_misc
 
 
 

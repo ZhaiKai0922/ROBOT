@@ -124,8 +124,10 @@ git reset HEAD readme.txt
 
 //如果已经add到缓存区，还没有commit，可以使用上面的指令，把缓存区的修改退回到工作区
 
-git remote add origin git@github.com:xxx/gitskills
+git remote add origin git@github.com:xxx/gitskills.git
 
 //本地的gitskills仓库与远程仓库gitskills进行关联
+
+git push -u origin master
 
 ![image-20201129214524050](/home/zk/.config/Typora/typora-user-images/image-20201129214524050.png)
