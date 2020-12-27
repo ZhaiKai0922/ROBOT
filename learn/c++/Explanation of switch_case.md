@@ -119,30 +119,77 @@ enum enumType1{First=-5, Second=14, Third=10};
 //则枚举的上限是16-1=15,枚举的下限是-8+1=-7
 ```
 
-## 4. 枚举的应用
+## 4. 枚举的应用：enum与switch结合使用
 
-个人觉得**枚举**和**switch**是最好的搭档
+个人觉得**枚举**和**switch**是最好的搭档，如下所示：
 
 ```cpp
-enum enumType{Step0, Step1, Step2, Step3, Step4};
-enumType Step;
-Step = Step0;
+//枚举和switch是最好的搭档：
+#include <iostream>
+
+using namespace std;
+enum enumType{Step0, Step1, Step2, Step3, Done};
+
+int main()
+{
+    enumType Step;
+    Step = Step0;
+    do
+    {
+        switch (Step)
+        {
+            case Step0: 
+            {
+                //语句块；
+                Step = Step1; 
+                cout<<"Step0"<<endl;
+                break;
+            }
+            case Step1:
+            {
+                //语句块；
+                Step = Step2;
+                cout<<"Step1"<<endl;
+                break;
+            }
+            case Step2:
+            {
+                //语句块；
+                Step = Step3;
+                cout<<"Step2"<<endl;
+                break;
+            }
+            case Step3:
+            {
+                //语句块
+                Step = Done;
+                cout<<"Step3"<<endl;
+                break;
+            }
+            default:{}
+        }
+    
+    } while (Step != Done);
+
+    return 0;
+
+}
 
 ```
 
+## 5. 运行结果
+
+依次打印出Step0，Step1，Step2，Step3：
+
+![image-20201227104833608](/home/zhx/.config/Typora/typora-user-images/image-20201227104833608.png)
 
 
 
+## 6. 参考博客
+
+https://blog.csdn.net/bruce_0712/article/details/54984371
 
 
-
-
-
-
-
-
-
-https://blog.csdn.net/songsong2017/article/details/84103565?ops_request_misc
 
 
 

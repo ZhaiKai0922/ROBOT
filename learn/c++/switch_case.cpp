@@ -61,50 +61,103 @@
 //     return 0;
 // }
 
+// #include "iostream"
+
+// using namespace std;
+
+// int main()
+// {
+//     int mark;
+//     cout<<"请输入成绩（0~100）:";
+//     cin>>mark;
+
+//     switch (mark/20)
+//     {
+//         case 5:
+//         {
+//             if(mark>100)//100~119都是mark/20==5，所以要用if语句再次进行过滤
+//             {
+//                 cout<<"ERROR"<<endl;
+//                 break;
+//             }
+//             cout<<"perfect"<<endl;
+//             break;  
+//         }
+//         case 4:
+//         {
+//             cout<<"Good!"<<endl;
+//             break;
+//         }
+//         case 3:
+//         {
+//             cout<<"Soso"<<endl;
+//             break;
+//         }
+//         case 2:
+//         case 1:
+//         case 0:
+//         {
+//             if (mark >=0)
+//             {
+//                 cout<<"Please work harder!"<<endl;
+//                 break;
+//             }
+
+//             cout<<"ERROR!"<<endl;
+//         }
+//     }
+//     return 0;
+// }
+
+
+//枚举和switch是最好的搭档：
 #include "iostream"
 
 using namespace std;
+enum enumType{Step0, Step1, Step2, Step3, Done};
 
 int main()
 {
-    int mark;
-    cout<<"请输入成绩（0~100）:";
-    cin>>mark;
-
-    switch (mark/20)
+    enumType Step;
+    Step = Step0;
+    do
     {
-        case 5:
+        switch (Step)
         {
-            if(mark>100)//100~119都是mark/20==5，所以要用if语句再次进行过滤
+            case Step0: 
             {
-                cout<<"ERROR"<<endl;
+                //语句块；
+                Step = Step1; 
+                cout<<"Step0"<<endl;
                 break;
             }
-            cout<<"perfect"<<endl;
-            break;  
-        }
-        case 4:
-        {
-            cout<<"Good!"<<endl;
-            break;
-        }
-        case 3:
-        {
-            cout<<"Soso"<<endl;
-            break;
-        }
-        case 2:
-        case 1:
-        case 0:
-        {
-            if (mark >=0)
+            case Step1:
             {
-                cout<<"Please work harder!"<<endl;
+                //语句块；
+                Step = Step2;
+                cout<<"Step1"<<endl;
                 break;
             }
+            case Step2:
+            {
+                //语句块；
+                Step = Step3;
+                cout<<"Step2"<<endl;
+                break;
+            }
+            case Step3:
+            {
+                //语句块
+                Step = Done;
+                cout<<"Step3"<<endl;
+                break;
+            }
+            default:{}
+        }
+    
+    } while (Step != Done);
 
-            cout<<"ERROR!"<<endl;
-        }
-    }
     return 0;
+
 }
+
