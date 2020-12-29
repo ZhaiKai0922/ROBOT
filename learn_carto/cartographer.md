@@ -60,7 +60,17 @@ submap的构建是不断的校准点集和submap的坐标。文中将点集表�
 
 ## 4. Ceres scan matching
 
-在将一个scan点集插入submap中之前
+在将一个scan点集插入submap中之前，这个scan点集的位置必须使用Ceres-based的scan matcher的方法进行优化(这个优化是相对于submap的位置)。这个scan matcher目的是为了找到一个点集位置，这个点集的位置在submap中的概率最大，将其作为一个非线性最小二乘问题。如下：
+
+![img](/home/zhx/zk/ROBOT/learn_carto/20170308151030150)
+
+
+
+
+
+
+
+
 
 
 
