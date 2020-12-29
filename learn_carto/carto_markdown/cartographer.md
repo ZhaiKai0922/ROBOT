@@ -48,7 +48,33 @@ submap的构建是不断的校准点集和submap的坐标。文中将点集表�
 
 一个submap是由连续几个scans建立的，这些submap采用的是概率网格M，这个代表着离散网格点中概率值，这个值可以作为表示这个网格是否为障碍物的概率。对于每个网格点，论文中都定义了一个相应的像素，这个像素包含了所有靠近这个网格点的scan points。无论什么时候一个scan点集被插入到这个概率网格中，一个包含网格点的hits集合以及一个miss集合都会被重新计算。对于每一次的hit，我们将每个像素关联的网格插入这个miss集合，对于已经在hit集合中的网格点不需要插入。对于每一个之前没有观察到的网给点都会根据他们所在的几何是hit还是miss赋予一个概率值
 
-如果一个网格点
+如果一个网格点已经被观察到了，我们将会更新这个概率值。通过以下的方式（hit修改）：
+
+![img](/home/zk/zk/ROBOT/learn_carto/carto_markdown/20170308150049514)
+
+对于miss的网格点的修改也是同样的，贴出论文中的图：
+
+![img](/home/zk/zk/ROBOT/learn_carto/carto_markdown/20170308150305030)
+
+灰色网格代表的是一次scan点集的范围，黑色的点表示hit(障碍物)的网格。
+
+## 4. Ceres scan matching
+
+在将一个scan点集插入submap中之前，这个scan点集的位置必须使用Ceres-based的scan matcher的方法进行优化(这个优化是相对于submap的位置)。这个scan matcher目的是为了找到一个点集位置，这个点集的位置在submap中的概率最大，将其作为一个非线性最小二乘问题。如下：
+
+![img](/home/zhx/zk/ROBOT/learn_carto/20170308151030150)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
