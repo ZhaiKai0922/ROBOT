@@ -24,14 +24,23 @@ using namespace std;
 ```cpp
 struct listpoint
 {
-    int data;
-    listpoint* next;
+    int data;  //这是一个数字，也就是抽屉里存放的东西
+    listpoint* next;  // 这是一个指向新抽屉的指针
 };
 ```
 
+这就是一个简单的结构体
 
+我们可以在抽屉里面放下一个抽屉的指针，自然也可以放上一个抽屉的指针：
 
-
+```cpp
+struct listpoint
+{
+    int data;
+    listpoint* next;
+    listpoint* last;
+};
+```
 
 
 
