@@ -99,15 +99,228 @@ listpoint* create_normal_list(int n)
 
 操作与之前一样，只不过最后一个节点的next指向头节点
 
+```cpp
+listpoint* creat_loop_list(int n)
+{
+    listpoint* head,*normal,*end;
+    head=(listpoint*)malloc(sizeof(listpoint));
+    head->infomation=(data*)malloc(sizeof(data));
+    end=head;
+    for(int i=0; i<n; i++)
+    {
+        normal=(listpoint*)malloc(sizeof(listpoint));
+        normal->information=(data*)malloc(sizeof(data));
+        cout<<"intput the number:";
+        cin>>normal->information->number; 
+        cout<<"input the name:";　　　　　　 
+        cin>>normal->information->name;
+        cout<<"input the sex:";
+        cin>>normal->information->sex;
+        cout<<"---------------------"<<endl;
+        
+        end->next=normal;
+        normal->last=end;
+        end=normal;
+    }
+    end->next=head;                             //环状链表这里与前面基础链表不同
+    head->last=end;
+    return head;
+}
+```
 
+## 3. 修改链表
 
+### 3.1 修改数据
 
+**因为我们通过指针可以直接修改地址储存的信息，所以函数并不需要返回值**
 
+```cpp
+void change_point(listpoint* list, int n, data* ifmation)
+{
+    listpoint* p;
+    p=list;
+    for(int i=0, i<n, i++)
+    {
+        p=p->next;
+    }
+    p->information=ifmation;
+}
+```
 
+### 3.2 删除节点
 
+```cpp
+void delete_point(listpoint* list, int n)
+{
+    listpoint* p;
+    p=list;
+    for(int i=0, i<n, i++)
+    {
+        p=p->next;
+    }
+    p->last->next=p->next;
+    p->next->last=p->last;
+    free(p);
+}
+```
 
+### 3.3 插入节点
 
+```cpp
+void insert_point(listpoint* list, int n, data* ifmation)
+{
+    listpoint* p;
+    p=list;
+    for(int i=0; i<n; i++)
+    {
+        p=p->next;
+    }
+    listpoint* insertpoint;
+    insertpoint=(listpoint*)malloc(sizeof(listpoint));
+    insertpoint->information=ifmation;
+    insertpoint->last=p;
+    insertpoint->next=p->next;
+    p->next->last=insertpoint;
+    p->next=insertpoint;
+}
+```
 
+### 3.4 搜寻节点
+
+```cpp
+listpoint* search_point(listpoint* list, int n)
+{
+    listpoint* p;
+    p=list;
+    for(int i=0; i<n; i++)
+    {
+        p=p->next;
+    }
+    return p;
+}
+```
+
+## 4. 输出数据
+
+### 4.1 输出单个节点数据
+
+```cpp
+void output_point(listpoint* point)
+{
+    cout<<"The number is:"<<point->information->number<<endl;
+    cout<<"The name   is:"<<point->information->name<<endl;
+    cout<<"The sex    is:"<<point->information->sex<<endl;
+    cout<<"----------------------------"<<endl;
+}
+```
+
+### 4.2 输出整个链表数据
+
+```cpp
+void output_list(listpoint* point)
+{
+    listpoint* p;
+    p=point;
+    cout<<endl;
+    while((p=p->next)!=NULL)
+    {
+        output_point(p);
+    }
+}
+```
+
+### 4.3 输出部分链表m点到n点
+
+```cpp
+dvoid output_list_part(listpoin* list, int m, int n)
+{
+    int difference=n-m;
+    listpoint* p;
+    p=list;
+    for(int i=0; i<m; i++)
+    {
+        p=p->next;
+    }
+    for(int i=0; i<difference; i++)
+    {
+        output_point(p);
+        p=p->next;
+    }
+}
+```
+
+## 5. 完整代码
+
+```cpp
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+struct data
+{
+    int number;
+    string name;
+    string sex;
+}
+struct listpoint
+{
+    data* information;
+    listpoint* next;
+    listpoint* last;
+}
+
+listpoint* creat_normal_list(int n)
+{
+    listpoint* head, *normal, *end;
+    head=(listpoint*)malloc(sizeof(listpoint));
+    head->information=(data*)malloc(sizeof(listpoint));
+    end=head;
+    for(int i=0; i<n; i++)
+    {
+        normal=(listpoint*)malloc(sizeof(listpoint));
+        normal->information=(data*)malloc(sizeof(data));
+        cout<<"input the number :";
+        cin>>normal->information->number;
+        cout<<"input the name   :";
+        cin>>normal->information->name;
+        cout<<"input the sex    :";
+        cin>>normal->information->sex;
+        cout<<"-----------------------------"<<endl;
+        end->next=normal;
+        normal->las=end;
+        end=normal;
+    }
+    end->next=NULL;
+    head->last=NULL;
+    return head;
+}
+
+void output_point(listpoint* point)
+{
+    cout<<"The number is :"<<point->information->number;
+    cout<<"The name   is :"<<point->information->number;
+    cout<<"The sex    is :"<<point->information->sex;
+}
+
+void output_list(listpoint* list)
+{
+    listpoint* p;
+    p=list;
+    while((p=p->next)!=NULL)
+    {
+        output_point(p);
+    }
+}
+//**********************************************************
+int main()
+{
+    listpoint* head;
+    head=creat_normal_list(4);
+    output_list(head);
+    return 0;
+}
+
+```
 
 
 
