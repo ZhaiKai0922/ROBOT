@@ -48,15 +48,15 @@ struct listpoint
 struct data
 {
     int number;
-    string name;
-    string sex;
-}
+    char name[10];
+    char sex[10];
+};
 struct listpoint
 {
     data* information;
     listpoint* next;
     listpoint* last;
-}//那个叫做information的小收纳盒装着一个人的学号，姓名，性别等信息
+};//那个叫做information的小收纳盒装着一个人的学号，姓名，性别等信息
 ```
 
 ## 2. 创建一个链表
@@ -259,21 +259,21 @@ using namespace std;
 struct data
 {
     int number;
-    string name;
-    string sex;
-}
+    char name[10];
+    char sex[10];
+};
 struct listpoint
 {
     data* information;
     listpoint* next;
     listpoint* last;
-}
+};
 
 listpoint* creat_normal_list(int n)
 {
     listpoint* head, *normal, *end;
     head=(listpoint*)malloc(sizeof(listpoint));
-    head->information=(data*)malloc(sizeof(listpoint));
+    head->information=(data*)malloc(sizeof(data));
     end=head;
     for(int i=0; i<n; i++)
     {
@@ -287,7 +287,7 @@ listpoint* creat_normal_list(int n)
         cin>>normal->information->sex;
         cout<<"-----------------------------"<<endl;
         end->next=normal;
-        normal->las=end;
+        normal->last=end;
         end=normal;
     }
     end->next=NULL;
@@ -297,9 +297,9 @@ listpoint* creat_normal_list(int n)
 
 void output_point(listpoint* point)
 {
-    cout<<"The number is :"<<point->information->number;
-    cout<<"The name   is :"<<point->information->number;
-    cout<<"The sex    is :"<<point->information->sex;
+    cout<<"The number is :"<<point->information->number<<";";
+    cout<<"The name   is :"<<point->information->name<<";";
+    cout<<"The sex    is :"<<point->information->sex<<";"<<endl;
 }
 
 void output_list(listpoint* list)
@@ -315,12 +315,63 @@ void output_list(listpoint* list)
 int main()
 {
     listpoint* head;
-    head=creat_normal_list(4);
+    head=creat_normal_list(2);
     output_list(head);
     return 0;
 }
 
 ```
+
+## 6. 运行结果
+
+创建两个节点，输入两节点相应data数据，最后打印出两节点内容：
+
+![image-20210104204831514](/home/zhx/zk/ROBOT/learn/c++/list/image-20210104204831514.png)
+
+## 7. C++中list用法
+
+### 7.1 list中常用的函数
+
+```cpp
+//list中的构造函数
+list();              //声明一个空列表
+list(n);             //声明一个有n个元素的列表，每个元素都是由其默认构造函数T()构造出来的
+list(n,val);         //声明一个有n个元素的列表，每个元素都是由其复制构造函数T(val)得来的
+list(first,last);    //声明一个列表，其元素的初始值来源于由区间所指定的序列中的元素
+
+push_back();         //使用list成员函数push_back和push_front插入一个元素到list中
+push_front();        //push_back从list的末端插入，push_front实现从list的首端插入
+
+empty();             //利用empty()判断list是否为空
+
+clear();             //清空list中所有函数
+
+front();             //通过front()可以获得list容器中的头部元素
+back();              //通过back()可以获得list容器的最后一个元素
+
+pop_back();          //通过pop_back()删除最后一个元素
+pop_front();         //通过pop_front()删除第一个元素
+
+assign();            //具体和vector中的操作类似，也是有两种情况
+l1.assign(n, val);   //将l1中的元素变为n个T(val)
+l1.assign(l2.begin(), l2.end()); //将l2中的从l2.begin()到l2.end()之间的数值赋给l1
+
+swap();              //交换两个链表，一个是l1.swap(l2);另外一个swap(l1,l2)，都可以完成两个链表的交换
+
+reverse();           //通过reverse()完成list逆置
+
+merge();             //合并两个链表并使之默认升序（可更改），l1.merge(l2, greater<int>());调用结束后，l2变成空，l2元素包含原来的l1,l2的元素，并且排好序，升序。
+```
+
+### 7.2 程序示例
+
+https://blog.csdn.net/yas12345678/article/details/52601578
+
+
+
+
+
+
 
 
 
