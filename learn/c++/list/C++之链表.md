@@ -1,7 +1,5 @@
 # C++之链表
 
-https://blog.csdn.net/slandarer/article/details/91863177?ops_request_misc
-
 ## 怎么理解链表？
 
 就是说现在有一个小纸条，上面写着一个抽屉的地址，那个抽屉里面有一些你需要的东西，和一个新的写着地址的小纸条，这个小纸条又指向了一个新抽屉，大体可以这么理解
@@ -14,8 +12,6 @@ https://blog.csdn.net/slandarer/article/details/91863177?ops_request_misc
 
 using namespace std;
 ```
-
-当然要做随机顺序链表的话，最好也包含ctime这个库
 
 ## １. 构建抽屉
 
@@ -326,7 +322,7 @@ int main()
 
 创建两个节点，输入两节点相应data数据，最后打印出两节点内容：
 
-![image-20210104204831514](/home/zhx/zk/ROBOT/learn/c++/list/image-20210104204831514.png)
+![image-20210104204831514](/home/zk/zk/ROBOT/learn/c++/list/image-20210104204831514.png)
 
 ## 7. C++中list用法
 
@@ -363,17 +359,110 @@ reverse();           //通过reverse()完成list逆置
 merge();             //合并两个链表并使之默认升序（可更改），l1.merge(l2, greater<int>());调用结束后，l2变成空，l2元素包含原来的l1,l2的元素，并且排好序，升序。
 ```
 
-### 7.2 程序示例
+### 7.2 程序示例一：
+
+```cpp
+#include <iostream>
+#include <list>
+using namespace std;
+
+int main()
+{
+    list<int> l1;
+    list<int> l2(2, 0);
+    list<int>::iterator iter;
+    l1.push_back(1);
+    l1.push_back(2);
+    l2.push_back(3);
+
+    for(iter = l1.begin(); iter != l1.end(); iter++)
+    {
+        cout<<"l1 :"<<*iter<<"  ";
+    }
+    cout<<endl<<endl;
+    for(iter = l2.begin(); iter != l2.end(); iter++)
+    {
+        cout<<"l2 :"<<*iter<<"  ";
+    }
+    cout<<endl<<endl;
+
+    l1.merge(l2);
+
+    cout<<"After the merge"<<endl<<endl;
+
+    for(iter = l1.begin(); iter != l1.end(); iter++)
+    {
+        cout<<"l1 :"<<*iter<<"  ";
+    }
+    cout<<endl<<endl;
+
+    if(l2.empty())
+    {
+        cout<<"l2 is empty!";
+    }
+    cout<<endl<<endl;
+    
+    return 0;
+}
+```
+
+**运行结果：**
+
+![image-20210105102449507](/home/zk/zk/ROBOT/learn/c++/list/image-20210105102449507.png)
+
+### 7.3 程序示例二：
+
+```cpp
+//结合第5部分代码，我们 #include <list> 进行修改
+#include <iostream>
+#include <list>
+using namespace std;
+
+struct data
+{
+    int number;
+    char name[10];
+    char sex[10];
+};
+//**********************************************************
+int main()
+{
+    list<data> l1;
+    for(int i=0; i<2; i++)
+    {
+        data* list_data = (data*)malloc(sizeof(data));
+        cout<<"Input the number is :";
+        cin>>list_data->number;
+        cout<<"Input the name is :";
+        cin>>list_data->name;
+        cout<<"Input the sex is :";
+        cin>>list_data->sex;
+        cout<<"--------------------------------"<<endl;
+         
+        l1.push_back(*list_data);
+    }
+
+    list<data>::iterator iter;
+    for(iter = l1.begin(); iter != l1.end(); iter++ )
+    {
+        cout<<"The number is : "<<iter->number<<";";
+        cout<<"The name      is : "<<iter->name<<";";
+        cout<<"The sex           is : "<<iter->sex<<";"<<endl;
+    }
+
+    return 0;
+}
+```
+
+**运行结果：**
+
+![image-20210105154922613](/home/zk/zk/ROBOT/learn/c++/list/image-20210105154922613.png)
+
+## 8. 参考链接
+
+https://blog.csdn.net/slandarer/article/details/91863177
 
 https://blog.csdn.net/yas12345678/article/details/52601578
-
-
-
-
-
-
-
-
 
 
 
