@@ -322,7 +322,7 @@ int main()
 
 创建两个节点，输入两节点相应data数据，最后打印出两节点内容：
 
-![image-20210104204831514](/home/zk/zk/ROBOT/learn/c++/list/image-20210104204831514.png)
+![image-20210104204831514](/home/zhx/zk/ROBOT/learn/c++/list/image-20210104204831514.png)
 
 ## 7. C++中list用法
 
@@ -408,7 +408,7 @@ int main()
 
 **运行结果：**
 
-![image-20210105102449507](/home/zk/zk/ROBOT/learn/c++/list/image-20210105102449507.png)
+![image-20210105102449507](/home/zhx/zk/ROBOT/learn/c++/list/image-20210105102449507.png)
 
 ### 7.3 程序示例二：
 
@@ -446,8 +446,8 @@ int main()
     for(iter = l1.begin(); iter != l1.end(); iter++ )
     {
         cout<<"The number is : "<<iter->number<<";";
-        cout<<"The name      is : "<<iter->name<<";";
-        cout<<"The sex           is : "<<iter->sex<<";"<<endl;
+        cout<<"The name   is : "<<iter->name<<";";
+        cout<<"The sex    is : "<<iter->sex<<";"<<endl;
     }
 
     return 0;
@@ -456,7 +456,7 @@ int main()
 
 **运行结果：**
 
-![image-20210105154922613](/home/zk/zk/ROBOT/learn/c++/list/image-20210105154922613.png)
+![image-20210105154922613](/home/zhx/zk/ROBOT/learn/c++/list/image-20210105154922613.png)
 
 ## 8. 参考链接
 
@@ -464,7 +464,7 @@ https://blog.csdn.net/slandarer/article/details/91863177
 
 https://blog.csdn.net/yas12345678/article/details/52601578
 
-
+刚开始尝试写代码，如有问题请指出～
 
 
 
