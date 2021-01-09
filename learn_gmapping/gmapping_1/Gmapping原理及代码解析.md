@@ -74,9 +74,9 @@ Gmapping采用GridSlamProcessorThread后台线程进行数据的读取和运算�
 
 t时刻粒子的位姿最初由运动模型进行更新。在初始值的基础上增加高斯采样的noisypoint，参考MotionModel::drawFromMotion( )方法。
 
-![image-20201217105223078](/home/zk/zk/ROBOT/learn_gmapping/image-20201217105223078.png)
+![image-20201217105223078](./image-20201217105223078.png)
 
-![image-20201217105251043](/home/zk/zk/ROBOT/learn_gmapping/image-20201217105251043.png)
+![image-20201217105251043](./image-20201217105251043.png)
 
 里程计数据通过轮编码器获取，随着时间的推移，误差会不断积累，而且角度误差积累的更厉害。IMU对角度的误差比距离积累要小。另外，机器人也可能存在机器人“绑架”之类的机械问题。这些都是运动模型的局限性，需要对运动观测数据进行优化校正，提高机器人的位姿精度。
 
@@ -194,7 +194,7 @@ ScanMatcher::optimize( )方法——粒子的运动+score( )中激光观测数�
 - 作用：提高提议分布
 - 方法：
 
-![image-20201217165000018](/home/zk/zk/ROBOT/learn_gmapping/image-20201217165000018.png)
+![image-20201217165000018](./image-20201217165000018.png)
 
 
 
@@ -226,7 +226,7 @@ slam_gmapping.cpp中有几个非常重要的函数。
 
 4.laserCallback函数是调用gmapping算法的主要函数。下图显示了该函数的执行流程：
 
-![img](/home/zk/zk/ROBOT/learn_gmapping/20191031101031290.png)
+![image-20210109144100881](./image-20210109144100881.png)
 
 5. updateMap函数里会获取权重最大的粒子，然后遍历该粒子的整个运动轨迹，并用轨迹上的各个点携带的激光数据生成地图。因为下次选中的可能不是原来的粒子，所以这里每次都会找到权重最大的粒子然后重新生成地图，发布出去。
 
@@ -287,7 +287,7 @@ class RangeReading: public SensorReading, public std::vector<double>{
 
 gmapping算法的主要处理函数就是gridslamprocessor.cpp中的processScan函数。slam_gmapping文件夹中的执行函数主要就是将ros格式的数据打包成gmapping算法所需要的数据格式，然后传入processScan函数。下图是该函数的执行流程：
 
-![img](/home/zk/zk/ROBOT/learn_gmapping/2019103110443490.png)
+![img](./2019103110443490.png)
 
 1.调用drawFromMotion函数更新每个粒子的位置分布。该函数里面对x, y, theta各个状态量维度都加了高斯噪声。论文中描述的算法好像没有说高斯噪声。
 

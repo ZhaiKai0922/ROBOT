@@ -131,3 +131,7 @@ git remote add origin git@github.com:xxx/gitskills.git
 git push -u origin master
 
 ![image-20201129214524050](/home/zk/.config/Typora/typora-user-images/image-20201129214524050.png)
+
+**markdown 语法：**
+
+<img src="" width = "500" height = "300" alt="1" align=center />

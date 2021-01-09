@@ -1,4 +1,4 @@
-# GMapping学习记录
+# GMapping学习总结
 
 ## 1. Rao-Blackwellized 粒子滤波
 
@@ -6,7 +6,7 @@
 
 根据贝叶斯法则，有
 
-![preview](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/v2-945b12dd6603aa4c4e20b28771a3823f_r.jpg)
+![preview](./v2-945b12dd6603aa4c4e20b28771a3823f_r.jpg)
 
 这一分解相当于把SLAM分离为定位和建图两步，大大降低SLAM问题的复杂度。该处理方法称为Rao-Blackwellized粒子滤波（RBPF）。
 
@@ -29,29 +29,29 @@ GMapping正是针对这两处缺陷，提出了针对方案。
 
 <img src="" width = "500" height = "300" alt="1" align=center />
 
-<img src="/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/image-20201218155252540.png" width = "500" height = "300" alt="1" align=center />
+<img src="./image-20201218155252540.png" width = "500" height = "300" alt="1" align=center />
 
 **实现方案：**
 
 - 首先按照里程计运动模型给出预测，图1中所有粒子通过里程计运动模型预测出新的位置如图2所示。
 
-<img src="/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/image-20201218155348597.png" width = "500" height = "260" alt="1" align=center />
+<img src="./image-20201218155348597.png" width = "500" height = "260" alt="1" align=center />
 
 - 以图2粒子的预测位置为初始值，对每一个粒子进行一次扫描匹配(scanMatch)。通过扫描匹配得到该粒子的最优位姿如图3，使得当前观测与该粒子所携带的地图最为贴合。
 
-<img src="/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/image-20201218162559110.png" width = "500" height = "260" alt="1" align=center />
+<img src="./image-20201218162559110.png" width = "500" height = "260" alt="1" align=center />
 
 - 得到每个粒子的最优位姿后，再在每个粒子的附近撒播k个粒子，用高斯函数来模拟提议分布如上图4所示，根据这k个粒子的里程计和观测模型来计算高斯分布均值和方差，如下图所示：
 
-![preview](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/v2-5021b502d9927f1799d3d18b3df26a32_r.jpg)
+![preview](./v2-5021b502d9927f1799d3d18b3df26a32_r.jpg)
 
 - 新的粒子从高斯分布中采样得到
 
-<img src="/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/image-20201218170532653.png" width = "500" height = "260" alt="1" align=center />
+<img src="./image-20201218170532653.png" width = "500" height = "260" alt="1" align=center />
 
 - 此外，对于每个粒子，我们还需要赋予一个权值，以供后续的重采样步骤使用。权重的计算方式如下：
 
-![preview](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/v2-af1962e28858cffecc03b24b9014c1ff_r.jpg)
+![preview](./v2-af1962e28858cffecc03b24b9014c1ff_r.jpg)
 
 这其实是一个全概率公式，考虑了K个可能出现在当前时刻的位姿，计算它们对当前观测贡献的加权平均。
 
@@ -63,7 +63,7 @@ GMapping正是针对这两处缺陷，提出了针对方案。
 
 那么，如何才能知道回环是否发生呢？显然，GMapping没有回环检测的算法，但机智的作者给出了更加巧妙的实现方式。直接通过下式评估所有粒子权重的分散程度。
 
-![img](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/v2-08da9548e086d829ec99e51700269e62_1440w.jpg)
+![img](./v2-08da9548e086d829ec99e51700269e62_1440w.jpg)
 
 Neff越大，粒子的权重差距越小。当Neff降低到某一个阈值以下，说明粒子的权重差距较大，即粒子的分布与真实分布差距很大，在粒子层面表现为某些粒子离真实值很近，而很多粒子离真实值较远。这正是回环发生时经常出现的情况，重采样就应该在此时进行。
 
@@ -504,7 +504,7 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 
 ### 4.8 score()
 
-![image-20201224151123880](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/image-20201224151123880.png)
+![image-20201224151123880](./image-20201224151123880.png)
 
 
 
@@ -514,7 +514,7 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 
 ## 5. 源码结构图
 
-![img](/home/zk/zk/ROBOT/learn_gmapping/new_gmapping/9e404be1713d7e2711f2d4a13c6549a5.png)
+![img](./9e404be1713d7e2711f2d4a13c6549a5.png)
 
 
 

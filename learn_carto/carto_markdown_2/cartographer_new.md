@@ -2,7 +2,7 @@
 
 ## 1. 基本代码结构：
 
-![image-20210107135604844](/home/zk/zk/ROBOT/learn_carto/carto_markdown_new/image-20210107135604844.png)
+![image-20210107135604844](./image-20210107135604844.png)
 
 **mapBuilder:** 实现整个地图的构建，包括前端local slam和后端global slam
 
@@ -39,9 +39,13 @@ transform: 坐标系转换。
 
 ## 2. scan处理流程: 
 
-从scan处理过程中理解代码结构。采取至上而下的方式，为了便于理解，一下代码中，删去了大部分源码，仅仅留存我们需要关注的部分。
+从scan处理过程中理解代码结构。采取至上而下的方式，为了便于理解，以下代码中，删去了大部分源码，仅仅留存我们需要关注的部分。
 
 cartographer_ros/node.cc
+
+```cpp
+//ros node 中处理订阅到的激光数据
+```
 
 
 
