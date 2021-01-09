@@ -431,7 +431,7 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 
 **score()函数的理解可以结合下图**
 
-![image-20201224151123880](/home/zhx/zk/ROBOT/learn_gmapping/gmapping_summary/picture/image-20201224151123880.png)
+![image-20201224151123880](./picture/image-20201224151123880.png)
 
 
 
@@ -441,7 +441,7 @@ double ScanMatcher::optimize(OrientedPoint& pnew, const ScanMatcherMap& map, con
 
 ## 源码结构图
 
-![img](/home/zhx/zk/ROBOT/learn_gmapping/gmapping_summary/picture/9e404be1713d7e2711f2d4a13c6549a5.png)
+![img](./picture/9e404be1713d7e2711f2d4a13c6549a5.png)
 
 
 
