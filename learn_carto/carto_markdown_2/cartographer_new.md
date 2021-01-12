@@ -45,7 +45,46 @@ cartographer_ros/node.cc
 
 ```cpp
 //ros node 中处理订阅到的激光数据
+void Node::HandleLaserScanMessage(const sensor_msg::LaserScan::ConstPtr& msg)
+{
+    map_builder_bridge_.sensor_bridge(trajectory_id)->HandleLaserScanMessage(sensor_id, msg);
+}
 ```
+
+cartographer_ros/sensor_bridge.cc
+
+```cpp
+void SensorBridge::HandleLaserScanMessage(
+const std::string& sensor_id, const sensor_msgs::LaserScan::ConstPtr& msg){
+    std::tie(point_cloud, time) = ToPointCloudWithIntensities(*msg);
+    HandleLaserScan(sensor_id, time, msg->header.frame_id, point_cloud)
+    {
+        carto::sensor::TimedPointCloud ranges getfrom(points);
+        HandleRangefinder(ranges)
+        {
+            //trajectory_builder_:通过CollatedTrajectoryBuilder实现
+            trajectory_builder_->AddSensorData(
+            sensor_id, carto::sensor::TimedPointCloudData{
+                carto::sensor::TransformTimedPointCloud(ranges)
+            })
+        }
+    }
+}
+```
+
+cartographer/mapping/internal/collated_trajectory_builder.cc
+
+```cpp
+class CollatedTrajectoryBuilder : public  TrajectoryBuilderInterface
+{
+    void AddSensorData(
+    const std::string& sensor_id,
+    const sensor::TimedPointCloudData& timed_point_cloud_data) override { AddData(sensor::MakeDispatchable(sensor_id, timed_point_cloud_data));
+}
+}
+```
+
+
 
 
 
