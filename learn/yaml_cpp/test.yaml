@@ -1,0 +1,10 @@
+name_one: xiaoming
+name_two: xiaohong
+xiaoming:
+  t1: x
+  t2: m
+  age: 19
+xiaohong:
+  t1: x
+  t2: h
+  age: 18
