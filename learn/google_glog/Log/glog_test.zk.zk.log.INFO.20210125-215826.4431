@@ -1,0 +1,7 @@
+Log file created at: 2021/01/25 21:58:26
+Running on machine: zk
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0125 21:58:26.907961  4431 glog_test.cpp:10] There is info: xxx
+W0125 21:58:26.908241  4431 glog_test.cpp:11] There is warning: xxx
+E0125 21:58:26.908320  4431 glog_test.cpp:12] There is error !!!
+W0125 21:58:26.908407  4431 glog_test.cpp:14] There is another warning

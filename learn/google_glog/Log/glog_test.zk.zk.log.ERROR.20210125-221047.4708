@@ -1,0 +1,4 @@
+Log file created at: 2021/01/25 22:10:47
+Running on machine: zk
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+E0125 22:10:47.698009  4708 glog_test.cpp:12] There is error !!!
