@@ -139,5 +139,21 @@ class KITTIFilteringFlow{
 
     //矩阵！！！
     //lidar odometry frame in map frame:
+    Eigen::Matrix4f fused_pose_ = Eigen::Matrix4f::Identity();
+    Eigen::Vector3f fused_vel_ = Eigen::Vector3::Zero();
     
-}
+    Eigen::Matrix4f laser_pose_ = EIgen::Matrix4f::Identity();
+
+    //trajectory for evo evaluation:
+    struct 
+    {
+        size_t N = 0;
+
+        std::deque<double> time_;
+        std::deque<Eigen::Matrix4f> fused_;
+        std::deque<Eigen::Matric4f> lidar_;
+        std::deque<Eigen::Matrix4f> ref_;
+    } trajectory;
+};
+
+#endif

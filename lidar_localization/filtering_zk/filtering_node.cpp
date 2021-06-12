@@ -4,7 +4,7 @@
 * @Date: 2021-6-10 09:55
 */
 #include <ros/ros.h>
-#include "lidar_localization/global_defination/global_defination.h";
+#include "lidar_localization/global_defination/global_defination.h"
 #include "lidar_localization/filtering/kitti_filtering_flow.hpp"
 #include "lidar_localization/saveOdometry.h"
 #include "glog/logging.h"
