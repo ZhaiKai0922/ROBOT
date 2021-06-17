@@ -575,7 +575,7 @@ void ErrorStateKalmanFilter::UpdateErrorEstimation(
   B.block<6, 6>(6, 6) = Eigen::Matrix<double, 6, 6>::Identity() * sqrt(T);
 
   X_ = F * X_;
-  P_ = F * P_ * F.transpose() + B * Q_ * B.transpose(); 
+  P_ = F * P_ * F.transpose() + B * Q_ * B.transpose();
 }
 
 //*******************************
@@ -586,12 +586,13 @@ void ErrorStateKalmanFilter::UpdateErrorEstimation(
  * @return void
  */
 void ErrorStateKalmanFilter::CorrectErrorEstimationPose(
-    const Eigen::Matrix4d &T_nb, Eigen:;VectorXd &Y, Eigen::MatrixXd &G,
+    const Eigen::Matrix4d &T_nb, Eigen::VectorXd &Y, Eigen::MatrixXd &G,
     Eigen::MatrixXd &K){
         Eigen::Vector3d P_nn_obs = 
             T_nb.block<3, 1>(0, 3) - pose_.block<3, 1>(0, 3)
-        Eigen::Vector3d R_nn_obs = Eigen::Matrix3d::Identity();
-        Eigen::Matrix<double, 6, 6> Ct = Eigen::Matrix<double, 6, 6>::Identity();
+        Eigen::Vector3d R_nn_obs = 
+            Sophus::SO3d::vee(pose_.block<3, 3>(0, 0).transpose() * T_nb.block<3, 3>(0, 0) - Eigen::Matrix3d:;Identity)
+
 
         YPose_.block<3, 1>(0, 0) = P_nn_obs;
         YPose_.block<3, 1>(3, 0) = R_nn_obs;
@@ -602,7 +603,7 @@ void ErrorStateKalmanFilter::CorrectErrorEstimationPose(
 
         MatrixRPose R = RPose_;
 
-        K = P_ * G.transpose() * (G * P_ * G.transpose() + Ct * R * Ct.transpose()).inverse(); 
+        K = P_ * G.transpose() * (G * P_ * G.transpose() + CPose_ * R * CPose_.transpose()).inverse(); 
     }
 
 /**
@@ -611,4 +612,82 @@ void ErrorStateKalmanFilter::CorrectErrorEstimationPose(
  * @param  measurement, input measurement
  * @return void
  */
+void ErrorStateKalmanFilter::CorrectErrorEstimation(
+    const MeasurementType &measurement_type, const Measurement &measurement)
+{
+    //
+    // TODO:understand ESKF correct workflow
+    //
+    Eigen::VectorXd Y;
+    Eigen::MatrixXd G, K;
+    switch (measurement_type)
+    {
+        case MeasurementType::POSE:
+          CorrectErrorEstimationPose(measurement.T_nb, Y, G, K);
+          break;
+        default;
+          break;
+    }
+
+    //
+    // TODO: perform kalman correct；
+    //
+
+    P_ = (MatrixP::Identity() - K * G) * P_;   //********
+
+    X_ = X_ + K * (Y - G * X_);
+
+}
+
+/**
+ * @brief eliminate error
+ * @param void
+ * @return void
+ */
+void ErrorStateKalmanFilter::EliminateError(void)
+{
+    //correct state estimation using ESKF
+
+    //a. position
+    pose_.block<3, 1>(0, 3) = 
+        pose_.block<3, 1>(0, 3) + X_.block<3, 1>(INDEX_ERROR_POS, 0);
+
+    //b. velocity:
+    vel_ = vel_ + X_.block<3, 1>(INDEX_ERROR_VEL, 0);
+
+    //c. orientation:
+    Eigen::Matrix3d C_nn =
+        Sophus::SO3d::exp(X_.block<3, 1>(INDEX_ERROR_VEL, 0)).matrix();
+    pose_.block<3, 3>(0, 0) = pose_.block<3, 3>(0, 0) * C_nn; 
+
+    //d. gyro bias:
+    if(IsCovStable(INDEX_ERROR_GYRO))
+    {
+        gyro_bias_ += X_.block<3, 1>(INDEX_ERROR_GYRO, 0);
+    }
+
+    //e. accel bias:
+    if(IsCovStable(INDEX_ERROR_ACCEL))
+    {
+        accl_bias_ += X_.block<3, 1>(INDEX_ERROR_ACCEL, 0);
+    }
+}
+
+/**
+ * @brief  is covariance stable
+ * @param  INDEX_OFSET, state index offset
+ * @param  THRESH, covariance threshold, defaults to 1.0e-5
+ * @return void
+ */
+bool ErrorStateKalmanFilter::IsCovStable(const int INDEX_OFSET,
+                                         const double THRESH) {
+  for (int i = 0; i < 3; ++i) {
+    if (P_(INDEX_OFSET + i, INDEX_OFSET + i) > THRESH) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 
