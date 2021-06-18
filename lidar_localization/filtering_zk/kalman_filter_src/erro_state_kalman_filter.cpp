@@ -230,7 +230,7 @@ bool ErrorStateKalmanFilter::Correct(const IMUData &imu_data,
                                                     const MeasurementType &measurement_type,
                                                     const Measurement &measurement)
 {
-    //get time delta:
+  //get time delta:
   double time_delta = measurement.time - time_;
 
   if (time_delta > -0.05) {
@@ -690,4 +690,224 @@ bool ErrorStateKalmanFilter::IsCovStable(const int INDEX_OFSET,
   return true;
 }
 
+/**
+ * @brief  reset filter state
+ * @param  void
+ * @return void
+ */
+void ErrorStateKalmanFilter::ResetState(void)
+{
+    //reset currenr state:
+    X_ = VectorX::Zero();
+}
 
+/**
+ * @brief  reset filter covariance
+ * @param  void
+ * @return void
+ */
+void ErrorStateKalmanFilter::ResetCovariance(void)
+{
+    P_ = MatrixP::Zero();
+
+    P_.block<3, 3>(INDEX_ERROR_POS, INDEX_ERROR_POS) = 
+        COV.PRIOR.POSI * Eigen::Matrix3d::Identity();
+    P_.block<3, 3>(INDEX_ERROR_VEL, INDEX_ERROR_VEL) =
+       COV.PRIOR.VEL * Eigen::Matrix3d::Identity();
+    P_.block<3, 3>(INDEX_ERROR_ORI, INDEX_ERROR_ORI) =
+       COV.PRIOR.ORI * Eigen::Matrix3d::Identity();
+    P_.block<3, 3>(INDEX_ERROR_GYRO, INDEX_ERROR_GYRO) =
+       COV.PRIOR.EPSILON * Eigen::Matrix3d::Identity();
+    P_.block<3, 3>(INDEX_ERROR_ACCEL, INDEX_ERROR_ACCEL) =
+       COV.PRIOR.DELTA * Eigen::Matrix3d::Identity();
+}
+
+/**
+ * @brief  get Q analysis for pose measurement
+ * @param  void
+ * @return void
+ */
+void ErrorStateKalmanFilter::GetQPose(Eigen::MatrixXd &Q, Eigen::VectorXd &Y) {
+  // build observability matrix for position measurement:
+  Y = Eigen::VectorXd::Zero(DIM_STATE * DIM_MEASUREMENT_POSE);
+  Y.block<DIM_MEASUREMENT_POSE, 1>(0, 0) = YPose_;
+  for (int i = 1; i < DIM_STATE; ++i) {
+    QPose_.block<DIM_MEASUREMENT_POSE, DIM_STATE>(i * DIM_MEASUREMENT_POSE, 0) =
+        (QPose_.block<DIM_MEASUREMENT_POSE, DIM_STATE>(
+             (i - 1) * DIM_MEASUREMENT_POSE, 0) *
+         F_);
+
+    Y.block<DIM_MEASUREMENT_POSE, 1>(i * DIM_MEASUREMENT_POSE, 0) = YPose_;
+  }
+
+  Q = QPose_;
+}
+
+/**
+ * @brief  get Q for pose & body velocity measurement
+ * @param  void
+ * @return QPoseVel
+ */
+void ErrorStateKalmanFilter::GetQPoseVel(Eigen::MatrixXd &Q,
+                                         Eigen::VectorXd &Y) {
+  // build observability matrix for position measurement:
+  QPoseVel_.block<DIM_MEASUREMENT_POSE_VEL, DIM_STATE>(0, 0) = GPoseVel_;
+
+  Y = Eigen::VectorXd::Zero(DIM_STATE * DIM_MEASUREMENT_POSE_VEL);
+  Y.block<DIM_MEASUREMENT_POSE_VEL, 1>(0, 0) = YPoseVel_;
+  for (int i = 1; i < DIM_STATE; ++i) {
+    QPoseVel_.block<DIM_MEASUREMENT_POSE_VEL, DIM_STATE>(
+        i * DIM_MEASUREMENT_POSE_VEL, 0) =
+        (QPoseVel_.block<DIM_MEASUREMENT_POSE_VEL, DIM_STATE>(
+             (i - 1) * DIM_MEASUREMENT_POSE_VEL, 0) *
+         F_);
+
+    Y.block<DIM_MEASUREMENT_POSE_VEL, 1>(i * DIM_MEASUREMENT_POSE_VEL, 0) =
+        YPoseVel_;
+  }
+
+  Q = QPoseVel_;
+}
+
+/**
+ * @brief  get Q for position measurement
+ * @param  void
+ * @return QPos
+ */
+void ErrorStateKalmanFilter::GetQPosi(Eigen::MatrixXd &Q, Eigen::VectorXd &Y) {
+  // build observability matrix for position measurement:
+  Y = Eigen::VectorXd::Zero(DIM_STATE * DIM_MEASUREMENT_POSI);
+  Y.block<DIM_MEASUREMENT_POSI, 1>(0, 0) = YPosi_;
+  for (int i = 1; i < DIM_STATE; ++i) {
+    QPosi_.block<DIM_MEASUREMENT_POSI, DIM_STATE>(i * DIM_MEASUREMENT_POSI, 0) =
+        (QPosi_.block<DIM_MEASUREMENT_POSI, DIM_STATE>(
+             (i - 1) * DIM_MEASUREMENT_POSI, 0) *
+         F_);
+
+    Y.block<DIM_MEASUREMENT_POSI, 1>(i * DIM_MEASUREMENT_POSI, 0) = YPosi_;
+  }
+
+  Q = QPosi_;
+}
+
+/**
+ * @brief  get Q for navigation position & body velocity measurement
+ * @param  void
+ * @return QPosVel
+ */
+void ErrorStateKalmanFilter::GetQPosiVel(Eigen::MatrixXd &Q,
+                                         Eigen::VectorXd &Y) {
+  // build observability matrix for position measurement:
+  QPosiVel_.block<DIM_MEASUREMENT_POSI_VEL, DIM_STATE>(0, 0) = GPosiVel_;
+
+  Y = Eigen::VectorXd::Zero(DIM_STATE * DIM_MEASUREMENT_POSI_VEL);
+  Y.block<DIM_MEASUREMENT_POSI_VEL, 1>(0, 0) = YPosiVel_;
+  for (int i = 1; i < DIM_STATE; ++i) {
+    QPosiVel_.block<DIM_MEASUREMENT_POSI_VEL, DIM_STATE>(
+        i * DIM_MEASUREMENT_POSI_VEL, 0) =
+        (QPosiVel_.block<DIM_MEASUREMENT_POSI_VEL, DIM_STATE>(
+             (i - 1) * DIM_MEASUREMENT_POSI_VEL, 0) *
+         F_);
+
+    Y.block<DIM_MEASUREMENT_POSI_VEL, 1>(i * DIM_MEASUREMENT_POSI_VEL, 0) =
+        YPosiVel_;
+  }
+
+  Q = QPosiVel_;
+}
+
+/**
+ * @brief  update observability analysis
+ * @param  measurement_type, measurement type
+ * @return void
+ */
+void ErrorStateKalmanFilter::UpdateObservabilityAnalysis(
+    const double &time, const MeasurementType &measurement_type) {
+  // get Q:
+  Eigen::MatrixXd Q;
+  Eigen::VectorXd Y;
+  switch (measurement_type) {
+  case MeasurementType::POSE:
+    GetQPose(Q, Y);
+    break;
+  case MeasurementType::POSE_VEL:
+    GetQPoseVel(Q, Y);
+    break;
+  case MeasurementType::POSI:
+    GetQPosi(Q, Y);
+    break;
+  case MeasurementType::POSI_VEL:
+    GetQPosiVel(Q, Y);
+    break;
+  default:
+    break;
+  }
+
+  observability.time_.push_back(time);
+  observability.Q_.push_back(Q);
+  observability.Y_.push_back(Y);
+}
+
+/**
+ * @brief  save observability analysis to persistent storage
+ * @param  measurement_type, measurement type
+ * @return void
+ */
+bool ErrorStateKalmanFilter::SaveObservabilityAnalysis(
+    const MeasurementType &measurement_type) {
+  // get fusion strategy:
+  std::string type;
+  switch (measurement_type) {
+  case MeasurementType::POSE:
+    type = std::string("pose");
+    break;
+  case MeasurementType::POSE_VEL:
+    type = std::string("pose_velocity");
+    break;
+  case MeasurementType::POSI:
+    type = std::string("position");
+    break;
+  case MeasurementType::POSI_VEL:
+    type = std::string("position_velocity");
+    break;
+  default:
+    return false;
+    break;
+  }
+
+  // build Q_so:
+  const int N = observability.Q_.at(0).rows();
+
+  std::vector<std::vector<double>> q_data, q_so_data;
+
+  Eigen::MatrixXd Qso(observability.Q_.size() * N, DIM_STATE);
+  Eigen::VectorXd Yso(observability.Y_.size() * N);
+
+  for (size_t i = 0; i < observability.Q_.size(); ++i) {
+    const double &time = observability.time_.at(i);
+
+    const Eigen::MatrixXd &Q = observability.Q_.at(i);
+    const Eigen::VectorXd &Y = observability.Y_.at(i);
+
+    Qso.block(i * N, 0, N, DIM_STATE) = Q;
+    Yso.block(i * N, 0, N, 1) = Y;
+
+    KalmanFilter::AnalyzeQ(DIM_STATE, time, Q, Y, q_data);
+
+    if (0 < i && (0 == i % 10)) {
+      KalmanFilter::AnalyzeQ(DIM_STATE, observability.time_.at(i - 5),
+                             Qso.block((i - 10), 0, 10 * N, DIM_STATE),
+                             Yso.block((i - 10), 0, 10 * N, 1), q_so_data);
+    }
+  }
+
+  std::string q_data_csv =
+      WORK_SPACE_PATH + "/slam_data/observability/" + type + ".csv";
+  std::string q_so_data_csv =
+      WORK_SPACE_PATH + "/slam_data/observability/" + type + "_som.csv";
+
+  KalmanFilter::WriteAsCSV(DIM_STATE, q_data, q_data_csv);
+  KalmanFilter::WriteAsCSV(DIM_STATE, q_so_data, q_so_data_csv);
+
+  return true;
+}
