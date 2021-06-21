@@ -241,10 +241,7 @@ bool LIOBackEnd::MaybeNewKeyFrame(
         }
 
         //
-        // for IMU pre-integration debugging ONLY:
-        // this is critical to IMU pre-integration verification
-        //
-        if ( 0 == (++count) % 10 ) {
+        // for IMU pre-integration debugging ONLY:MaybeNewKeyFrame
             // display IMU pre-integration:
             // ShowIMUPreIntegrationResidual(last_gnss_pose, gnss_odom, imu_pre_integration_); 
 
@@ -289,3 +286,72 @@ bool LIOBackEnd::MaybeNewKeyFrame(
     return has_new_key_frame_;
 }
 
+bool LIOBackEnd::AddNodeAndEdge(const PoseData& gnss_data) {
+    static KeyFrame last_key_frame_ = current_key_frame_;
+
+    //
+    // add node for new key frame pose:
+    //
+    // fix the pose of the first key frame for lidar only mapping:
+    if (!graph_optimizer_config_.use_gnss && graph_optimizer_ptr_->GetNodeNum() == 0) {
+        graph_optimizer_ptr_->AddPRVAGNode(current_key_frame_, true);
+    } else {
+        graph_optimizer_ptr_->AddPRVAGNode(current_key_gnss_, false);
+    }
+
+    //
+    // add constraints:
+    //
+    // get num. of vertices:
+    const int N = graph_optimizer_ptr_->GetNodeNum();
+    // get vertex IDs:
+    const int vertex_index_i = N - 2;
+    const int vertex_index_j = N - 1;
+    // a. lidar frontend / loop closure detection:
+    if ( N > 1 ) {
+        // get relative pose measurement:
+        Eigen::Matrix4d relative_pose = (last_key_frame_.pose.inverse() * current_key_frame_.pose).cast<double>();
+        // add constraint, lidar frontend / loop closure detection:
+        graph_optimizer_ptr_->AddPRVAGRelativePoseEdge(
+            vertex_index_i, vertex_index_j, 
+            relative_pose, graph_optimizer_config_.odom_edge_noise
+        );
+    }
+
+    // b. GNSS position:
+    if ( graph_optimizer_config_.use_gnss ) {
+        // get prior position measurement:
+        Eigen::Vector3d pos = current_key_gnss_.pose.block<3, 1>(0, 3).cast<double>();
+        // add constraint, GNSS position:
+        graph_optimizer_ptr_->AddPRVAGPriorPosEdge(
+            vertex_index_j, 
+            pos, graph_optimizer_config_.gnss_noise
+        );
+    }
+
+    //
+    // ***********c. IMU pre-integration:****************
+    //
+    if ( graph_optimizer_config_.use_imu_pre_integration ) {
+        // add constraint, IMU pre-integraion:
+        graph_optimizer_ptr_->AddPRVAGIMUPreIntegrationEdge(
+            vertex_index_i, vertex_index_j,
+            imu_pre_integration_
+        );
+    }
+
+    // d. Odo pre-integration:
+    if ( graph_optimizer_config_.use_odo_pre_integration ) {
+        // add constraint, odo pre-integraion:
+        graph_optimizer_ptr_->AddPRVAGOdoPreIntegrationEdge(
+            vertex_index_i, vertex_index_j,
+            odo_pre_integration_
+        );
+    }
+
+    // move forward:
+    last_key_frame_ = current_key_frame_;
+    ++counter_.key_frame;
+
+    return true;
+}
