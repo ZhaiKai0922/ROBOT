@@ -193,7 +193,6 @@ bool LIOBackEndFlow::UpdateOdoPreIntegration(void)
     return true;
 }
 
-//TODO:
 bool LIOBackEndFlow::UpdateBackEnd()
 {
     static bool odometry_inited = false;
@@ -242,7 +241,6 @@ bool LIOBackEndFlow::PublishData() {
         key_gnss_pub_ptr_->Publish(key_frame);
     }
 
-    //TODO:
     if (back_end_ptr_->HasNewOptimized()) {
         std::deque<KeyFrame> optimized_key_frames;
         back_end_ptr_->GetOptimizedKeyFrames(optimized_key_frames);
